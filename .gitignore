@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Environment variables — never commit secrets
+.env
+.env.local
+.env.production
+client/.env
+client/.env.local
+server/.env
+server/.env.local
+
+# Build output
+dist/
+build/
+client/dist/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/settings.json
+
+# Tooling
+.vercel
+.railway
+.netlify
+.claude/
+.playwright-mcp/
+
+# Vite temp files
+*.timestamp-*.mjs

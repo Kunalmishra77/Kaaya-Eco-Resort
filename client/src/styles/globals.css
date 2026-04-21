@@ -1,0 +1,275 @@
+/* d:/kaaya eco resort/client/src/styles/globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply font-sans text-timber bg-stone;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
+  }
+
+  * {
+    @apply box-border;
+  }
+
+  ::selection {
+    @apply bg-sand/30 text-timber;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-sand;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-stone;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-sage rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-olive;
+  }
+}
+
+@layer components {
+  /* Primary CTA button */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2
+           bg-sand text-timber font-sans font-semibold
+           uppercase tracking-[0.12em] text-sm
+           px-8 py-3.5 rounded-sm
+           transition-all duration-300
+           hover:bg-timber hover:text-stone
+           active:scale-[0.98]
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  /* Outline CTA button */
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2
+           border border-sand text-sand font-sans font-semibold
+           uppercase tracking-[0.12em] text-sm
+           px-8 py-3.5 rounded-sm
+           transition-all duration-300
+           hover:bg-sand hover:text-timber
+           active:scale-[0.98]
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  /* White outline button (for dark backgrounds) */
+  .btn-outline-white {
+    @apply inline-flex items-center justify-center gap-2
+           border border-stone/60 text-stone font-sans font-semibold
+           uppercase tracking-[0.12em] text-sm
+           px-8 py-3.5 rounded-sm
+           transition-all duration-300
+           hover:bg-stone hover:text-timber
+           active:scale-[0.98];
+  }
+
+  /* Section label — small uppercase eyebrow text */
+  .section-label {
+    @apply text-sand uppercase tracking-[0.25em] text-xs font-sans font-semibold;
+  }
+
+  /* Section heading */
+  .section-heading {
+    @apply font-display text-forest text-4xl md:text-5xl leading-tight;
+  }
+
+  /* Page section padding */
+  .page-section {
+    @apply py-20 md:py-28 px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Max-width container */
+  .container-lg {
+    @apply max-w-7xl mx-auto;
+  }
+
+  /* Card hover lift */
+  .card-hover {
+    @apply transition-all duration-500 hover:-translate-y-1 hover:shadow-xl;
+  }
+
+  /* Input base style */
+  .input-base {
+    @apply w-full bg-white border border-sage/40 text-timber font-sans text-sm
+           px-4 py-3 rounded-sm
+           placeholder:text-timber/40
+           focus:outline-none focus:border-sand focus:ring-1 focus:ring-sand/50
+           transition-colors duration-200;
+  }
+
+  /* Divider line */
+  .divider {
+    @apply border-t border-sage/20 my-2;
+  }
+
+  /* Prose-style long text */
+  .prose-resort {
+    @apply font-sans text-timber/80 leading-relaxed text-base;
+  }
+
+  /* Badge */
+  .badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-sans font-semibold uppercase tracking-wider;
+  }
+}
+
+@layer utilities {
+  /* Text stroke for display headings over images */
+  .text-shadow-sm {
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  }
+  .text-shadow-md {
+    text-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  }
+  .text-shadow-lg {
+    text-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  }
+
+  /* Gradient overlays */
+  .overlay-dark {
+    background: linear-gradient(to bottom, rgba(27,67,50,0.4) 0%, rgba(27,67,50,0.7) 100%);
+  }
+  .overlay-hero {
+    background: linear-gradient(
+      to bottom,
+      rgba(27,67,50,0.3) 0%,
+      rgba(27,67,50,0.1) 40%,
+      rgba(27,67,50,0.65) 100%
+    );
+  }
+  /* Lighter overlay for inner page heroes — lets image breathe */
+  .overlay-page-hero {
+    background: linear-gradient(
+      to bottom,
+      rgba(0,0,0,0.55) 0%,
+      rgba(0,0,0,0.35) 40%,
+      rgba(27,67,50,0.60) 100%
+    );
+  }
+  /* Minimal overlay for video — maximum clarity */
+  .overlay-video {
+    background: linear-gradient(
+      to bottom,
+      rgba(0,0,0,0.18) 0%,
+      rgba(0,0,0,0.04) 40%,
+      rgba(27,67,50,0.55) 100%
+    );
+  }
+
+  /* Aspect ratios */
+  .aspect-room {
+    aspect-ratio: 4 / 3;
+  }
+  .aspect-hero {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+/* React Datepicker overrides */
+.react-datepicker-wrapper {
+  width: 100%;
+}
+.react-datepicker {
+  font-family: 'DM Sans', sans-serif !important;
+  border-color: #8FAF91 !important;
+  border-radius: 2px !important;
+}
+.react-datepicker__header {
+  background-color: #1B4332 !important;
+  border-bottom-color: #4A7C59 !important;
+}
+.react-datepicker__current-month,
+.react-datepicker__day-name {
+  color: #F5F0E8 !important;
+}
+.react-datepicker__day--selected,
+.react-datepicker__day--in-range,
+.react-datepicker__day--range-start,
+.react-datepicker__day--range-end {
+  background-color: #C8A96E !important;
+  color: #5C3D1E !important;
+}
+.react-datepicker__day--in-selecting-range {
+  background-color: rgba(200, 169, 110, 0.3) !important;
+}
+.react-datepicker__day:hover {
+  background-color: #8FAF91 !important;
+  color: #1B4332 !important;
+}
+.react-datepicker__day--disabled {
+  color: #ccc !important;
+  text-decoration: line-through;
+}
+
+/* Swiper overrides */
+.swiper-pagination-bullet {
+  background: #F5F0E8 !important;
+  opacity: 0.5 !important;
+}
+.swiper-pagination-bullet-active {
+  background: #C8A96E !important;
+  opacity: 1 !important;
+}
+.swiper-button-next,
+.swiper-button-prev {
+  color: #C8A96E !important;
+}
+
+/* YARL lightbox overrides */
+.yarl__slide_image {
+  border-radius: 2px;
+}
+
+/* ── Testimonial infinite scroll ───────────────────────────────── */
+@keyframes scroll-x {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.testimonial-track {
+  display: flex;
+  animation: scroll-x 30s linear infinite;
+}
+.testimonial-track:hover {
+  animation-play-state: paused;
+}
+
+/* ── Ken Burns cinematic hero animations ───────────────────────── */
+@keyframes kb-tl {
+  0%   { transform: scale(1.10) translate3d(1.5%, 1.5%, 0); }
+  100% { transform: scale(1)    translate3d(0, 0, 0); }
+}
+@keyframes kb-tr {
+  0%   { transform: scale(1)    translate3d(0, 0, 0); }
+  100% { transform: scale(1.10) translate3d(-1.5%, -1%, 0); }
+}
+@keyframes kb-bl {
+  0%   { transform: scale(1.08) translate3d(-1%, 0, 0); }
+  100% { transform: scale(1)    translate3d(1%, 1.5%, 0); }
+}
+@keyframes kb-br {
+  0%   { transform: scale(1)    translate3d(-1%, -1%, 0); }
+  100% { transform: scale(1.10) translate3d(0.5%, 0.5%, 0); }
+}
+.kenburns-0 { animation: kb-tl 9s ease-in-out forwards; }
+.kenburns-1 { animation: kb-tr 9s ease-in-out forwards; }
+.kenburns-2 { animation: kb-bl 9s ease-in-out forwards; }
+.kenburns-3 { animation: kb-br 9s ease-in-out forwards; }

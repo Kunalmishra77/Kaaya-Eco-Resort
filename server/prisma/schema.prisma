@@ -1,0 +1,151 @@
+// d:/kaaya eco resort/server/prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  GUEST
+  ADMIN
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  CHECKED_IN
+  CHECKED_OUT
+}
+
+enum RoomType {
+  FAMILY_ROOM
+  FAMILY_CHALET
+  STANDARD_CHALET
+}
+
+model User {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  password  String
+  firstName String
+  lastName  String
+  phone     String?
+  role      Role      @default(GUEST)
+  bookings  Booking[]
+  reviews   Review[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([email])
+}
+
+model Room {
+  id              String        @id @default(cuid())
+  name            String
+  slug            String        @unique
+  type            RoomType
+  description     String        @default("")
+  longDescription String        @default("")
+  pricePerNight   Float
+  maxAdults       Int
+  maxChildren     Int           @default(0)
+  bedCount        Int           @default(1)
+  amenities       String[]
+  images          String[]
+  featured        Boolean       @default(false)
+  active          Boolean       @default(true)
+  bookings        Booking[]
+  blockedDates    BlockedDate[]
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([slug])
+  @@index([type])
+  @@index([active])
+}
+
+model Booking {
+  id               String        @id @default(cuid())
+  userId           String
+  roomId           String
+  checkIn          DateTime
+  checkOut         DateTime
+  adults           Int
+  children         Int           @default(0)
+  totalPrice       Float
+  status           BookingStatus @default(PENDING)
+  specialRequests  String?
+  stripePaymentId  String?
+  guestName        String
+  guestEmail       String
+  guestPhone       String?
+  user             User          @relation(fields: [userId],  references: [id], onDelete: Cascade)
+  room             Room          @relation(fields: [roomId],  references: [id])
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  @@index([userId])
+  @@index([roomId])
+  @@index([status])
+  @@index([checkIn, checkOut])
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  userId    String
+  rating    Int
+  title     String?
+  comment   String
+  approved  Boolean  @default(false)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([approved])
+}
+
+model GalleryImage {
+  id        String   @id @default(cuid())
+  url       String
+  publicId  String   @unique
+  category  String   @default("general")
+  caption   String?
+  sortOrder Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([category])
+  @@index([active])
+}
+
+model Inquiry {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  subject   String   @default("General Inquiry")
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([read])
+}
+
+model BlockedDate {
+  id        String   @id @default(cuid())
+  roomId    String
+  date      DateTime
+  reason    String?
+  room      Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([roomId, date])
+  @@index([roomId])
+}
