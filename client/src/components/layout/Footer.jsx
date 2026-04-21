@@ -47,7 +47,7 @@ export default function Footer() {
                 href="https://www.facebook.com/kaayaecoresort"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 rounded-full border border-stone/20 flex items-center justify-center text-stone/60 hover:border-sand hover:text-sand transition-colors"
+                className="w-11 h-11 rounded-full border border-stone/20 flex items-center justify-center text-stone/60 hover:border-sand hover:text-sand transition-colors"
                 aria-label="Facebook"
               >
                 <Facebook size={16} />
@@ -56,7 +56,7 @@ export default function Footer() {
                 href="https://www.instagram.com/kaayaecoresort"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 rounded-full border border-stone/20 flex items-center justify-center text-stone/60 hover:border-sand hover:text-sand transition-colors"
+                className="w-11 h-11 rounded-full border border-stone/20 flex items-center justify-center text-stone/60 hover:border-sand hover:text-sand transition-colors"
                 aria-label="Instagram"
               >
                 <Instagram size={16} />

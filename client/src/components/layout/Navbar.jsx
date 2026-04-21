@@ -81,7 +81,7 @@ export default function Navbar() {
             <img
               src="/logo.svg"
               alt="Kaaya Eco Resort"
-              className="h-20 w-auto"
+              className="h-12 sm:h-16 lg:h-20 w-auto"
               style={{ filter: 'drop-shadow(0 1px 4px rgba(0,0,0,0.5))' }}
               onError={(e) => {
                 e.target.style.display = 'none'
@@ -176,7 +176,7 @@ export default function Navbar() {
             {/* Hamburger */}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="lg:hidden p-2 text-stone hover:text-sand transition-colors"
+              className="lg:hidden p-3 text-stone hover:text-sand transition-colors"
               aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={mobileOpen}
             >
@@ -202,7 +202,7 @@ export default function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'tween', duration: 0.3 }}
-              className="fixed top-0 right-0 bottom-0 w-80 max-w-full bg-forest z-50 lg:hidden flex flex-col"
+              className="fixed top-0 right-0 bottom-0 w-full sm:w-80 bg-forest z-50 lg:hidden flex flex-col"
             >
               <div className="flex items-center justify-between p-6 border-b border-stone/10">
                 <div>

@@ -86,7 +86,7 @@ export default function Gallery() {
         subtitle="The wild, the water, the warmth — captured in a moment."
         image="/images/tropical-garden.jpg"
         objectPosition="center 60%"
-        height="h-[62vh] min-h-[400px]"
+        height="h-[45vh] sm:h-[62vh] min-h-[280px] sm:min-h-[400px]"
       />
 
       <section className="page-section bg-stone">

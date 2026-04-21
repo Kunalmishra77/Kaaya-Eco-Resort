@@ -38,13 +38,13 @@ export default function About() {
         subtitle="A family-built retreat at the edge of one of Sri Lanka's greatest national parks."
         image="/images/chalet-sunset.jpg"
         objectPosition="center 45%"
-        height="h-[72vh] min-h-[460px]"
+        height="h-[50vh] sm:h-[72vh] min-h-[320px] sm:min-h-[460px]"
       />
 
       {/* Origin story */}
       <section className="page-section bg-stone">
         <div className="container-lg">
-          <div className="grid lg:grid-cols-2 gap-16 items-center mb-28">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center mb-12 sm:mb-20 lg:mb-28">
             <SectionReveal direction="left">
               <p className="section-label mb-4">How It Began</p>
               <h2 className="section-heading mb-6">
@@ -68,7 +68,7 @@ export default function About() {
 
             <SectionReveal direction="right" delay={0.1}>
               <div className="space-y-4">
-                <div className="h-64 rounded-sm overflow-hidden">
+                <div className="h-48 sm:h-64 rounded-sm overflow-hidden">
                   <img
                     src="/images/lake-sunset-tree.jpg"
                     alt="Yoda Wewa from the resort grounds"
@@ -76,14 +76,14 @@ export default function About() {
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="h-40 rounded-sm overflow-hidden">
+                  <div className="h-32 sm:h-40 rounded-sm overflow-hidden">
                     <img
                       src="/images/garden-buddha.jpg"
                       alt="Resort gardens"
                       className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
                     />
                   </div>
-                  <div className="h-40 rounded-sm overflow-hidden">
+                  <div className="h-32 sm:h-40 rounded-sm overflow-hidden">
                     <img
                       src="/images/chalet-jungle-exterior.jpg"
                       alt="Original chalet"
@@ -96,9 +96,9 @@ export default function About() {
           </div>
 
           {/* Location */}
-          <div className="grid lg:grid-cols-2 gap-16 items-center mb-28">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center mb-12 sm:mb-20 lg:mb-28">
             <SectionReveal direction="left" className="order-2 lg:order-1">
-              <div className="grid grid-cols-2 gap-3 h-96">
+              <div className="grid grid-cols-2 gap-3 h-64 sm:h-80 lg:h-96">
                 <div className="row-span-2 rounded-sm overflow-hidden">
                   <img
                     src="/images/tropical-garden.jpg"
@@ -154,7 +154,7 @@ export default function About() {
             <h2 className="section-heading">Our Values</h2>
           </SectionReveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-28">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 sm:mb-20 lg:mb-28">
             {VALUES.map((v, i) => (
               <SectionReveal key={v.title} delay={i * 0.1} direction="up">
                 <div className="bg-white border border-sage/20 rounded-sm p-7 card-hover h-full">

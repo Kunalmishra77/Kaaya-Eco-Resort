@@ -7,7 +7,7 @@ export default function PageHero({
   label,
   image,
   objectPosition = 'center',
-  height = 'h-[55vh] min-h-[380px]',
+  height = 'h-[45vh] sm:h-[55vh] min-h-[280px] sm:min-h-[380px]',
   align = 'center',
   overlay = 'overlay-page-hero',
   children,
@@ -36,7 +36,7 @@ export default function PageHero({
       )}
 
       {/* Content — centred both axes on all inner pages */}
-      <div className="relative z-10 flex-1 flex flex-col justify-center items-center text-center px-4 sm:px-6 lg:px-8 py-16">
+      <div className="relative z-10 flex-1 flex flex-col justify-center items-center text-center px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
         <div className="container-lg w-full flex flex-col items-center">
           <motion.div
             className="flex flex-col items-center text-center"
@@ -47,7 +47,7 @@ export default function PageHero({
             {label && (
               <p className="section-label text-sand mb-4 drop-shadow-md">{label}</p>
             )}
-            <h1 className="font-display text-white text-4xl sm:text-5xl lg:text-6xl font-semibold leading-tight max-w-3xl"
+            <h1 className="font-display text-white text-3xl sm:text-4xl lg:text-6xl font-semibold leading-tight max-w-3xl"
                 style={{ textShadow: '0 2px 20px rgba(0,0,0,0.7), 0 1px 4px rgba(0,0,0,0.9)' }}>
               {title}
             </h1>

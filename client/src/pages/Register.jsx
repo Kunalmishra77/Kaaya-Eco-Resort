@@ -72,7 +72,7 @@ export default function Register() {
           </p>
 
           <form onSubmit={handleSubmit} noValidate className="space-y-5">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label htmlFor="firstName" className="block font-sans text-xs uppercase tracking-wider text-timber/50 mb-1.5 font-semibold">
                   First Name

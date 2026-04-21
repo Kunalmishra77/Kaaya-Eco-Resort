@@ -131,7 +131,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.3 }}
-                className="font-display text-white text-5xl sm:text-6xl lg:text-7xl font-semibold leading-none"
+                className="font-display text-white text-4xl sm:text-5xl lg:text-7xl font-semibold leading-none"
               style={{ textShadow: '0 2px 24px rgba(0,0,0,0.75), 0 1px 5px rgba(0,0,0,0.95)' }}
               >
                 Your Gateway to<br />
@@ -150,7 +150,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.8 }}
-                className="flex flex-wrap gap-4 mt-10"
+                className="flex flex-wrap gap-3 sm:gap-4 mt-8 sm:mt-10"
               >
                 <Link to="/book" className="btn-primary">
                   Book a Stay <ArrowRight size={16} />
@@ -191,7 +191,7 @@ export default function Home() {
       {/* ── Stats strip ──────────────────────────────────────────────────── */}
       <section className="bg-forest">
         <div className="container-lg px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {STATS.map((stat, i) => (
               <SectionReveal key={stat.label} delay={i * 0.08} direction="up">
                 <div className="text-center">
@@ -207,7 +207,7 @@ export default function Home() {
       {/* ── About intro ───────────────────────────────────────────────────── */}
       <section className="page-section bg-stone">
         <div className="container-lg">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
             <SectionReveal direction="left">
               <p className="section-label mb-4">About Kaaya</p>
               <h2 className="section-heading mb-6">
@@ -225,7 +225,7 @@ export default function Home() {
             </SectionReveal>
 
             <SectionReveal direction="right" delay={0.15}>
-              <div className="grid grid-cols-2 gap-3 h-[480px]">
+              <div className="grid grid-cols-2 gap-3 h-[280px] sm:h-[380px] lg:h-[480px]">
                 {/* Tall left image — lake sunset tree */}
                 <div className="row-span-2 rounded-sm overflow-hidden">
                   <img
@@ -259,7 +259,7 @@ export default function Home() {
       {/* ── Featured rooms ────────────────────────────────────────────────── */}
       <section className="page-section bg-white">
         <div className="container-lg">
-          <SectionReveal className="text-center mb-14">
+          <SectionReveal className="text-center mb-8 sm:mb-14">
             <p className="section-label mb-4">Accommodation</p>
             <h2 className="section-heading">Stay With Us</h2>
             <p className="font-sans text-timber/60 text-lg mt-4 max-w-xl mx-auto">
@@ -291,7 +291,7 @@ export default function Home() {
       {/* ── Experiences ───────────────────────────────────────────────────── */}
       <section className="page-section bg-stone">
         <div className="container-lg">
-          <SectionReveal className="text-center mb-14">
+          <SectionReveal className="text-center mb-8 sm:mb-14">
             <p className="section-label mb-4">Experiences</p>
             <h2 className="section-heading">Adventures Await</h2>
             <p className="font-sans text-timber/60 text-lg mt-4 max-w-xl mx-auto">
@@ -335,7 +335,7 @@ export default function Home() {
       </section>
 
       {/* ── Pool / Amenities highlight ─────────────────────────────────────── */}
-      <section className="relative h-[60vh] min-h-[400px] overflow-hidden">
+      <section className="relative h-[50vh] sm:h-[60vh] min-h-[280px] sm:min-h-[400px] overflow-hidden">
         <img
           src="/images/pool-trees.jpg"
           alt="Resort swimming pool"
@@ -345,7 +345,7 @@ export default function Home() {
         <div className="absolute inset-0 flex items-center justify-center">
           <SectionReveal className="text-center px-4">
             <p className="section-label text-sand/80 mb-4">On-site Facilities</p>
-            <h2 className="font-display text-stone text-4xl sm:text-5xl font-semibold mb-6 max-w-2xl mx-auto leading-tight">
+            <h2 className="font-display text-stone text-3xl sm:text-4xl md:text-5xl font-semibold mb-5 sm:mb-6 max-w-2xl mx-auto leading-tight">
               A Pool Beneath the Palms
             </h2>
             <p className="font-sans text-stone/70 text-lg mb-8 max-w-md mx-auto">
@@ -362,7 +362,7 @@ export default function Home() {
       <GuestReviews />
 
       {/* ── CTA banner ────────────────────────────────────────────────────── */}
-      <section className="relative py-28 overflow-hidden">
+      <section className="relative py-16 sm:py-24 md:py-28 overflow-hidden">
         <div className="absolute inset-0">
           <img
             src="/images/lake-dusk.jpg"
@@ -377,7 +377,7 @@ export default function Home() {
         <div className="relative z-10 container-lg px-4 sm:px-6 lg:px-8 text-center">
           <SectionReveal>
             <p className="section-label text-sand/80 mb-4">Your Wild Heart Awaits</p>
-            <h2 className="font-display text-stone text-4xl sm:text-5xl font-semibold mb-6 max-w-2xl mx-auto leading-tight">
+            <h2 className="font-display text-stone text-3xl sm:text-4xl md:text-5xl font-semibold mb-5 sm:mb-6 max-w-2xl mx-auto leading-tight">
               Ready for Your Yala Adventure?
             </h2>
             <p className="font-sans text-stone/65 text-lg mb-10 max-w-md mx-auto leading-relaxed">
@@ -422,7 +422,7 @@ function GuestReviews() {
   return (
     <section className="page-section bg-white overflow-hidden">
       <div className="container-lg mb-12">
-        <SectionReveal className="text-center mb-14">
+        <SectionReveal className="text-center mb-8 sm:mb-14">
           <p className="section-label mb-4">Guest Reviews</p>
           <h2 className="section-heading">What Our Guests Say</h2>
         </SectionReveal>

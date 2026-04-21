@@ -63,12 +63,12 @@ export default function Contact() {
         subtitle="We're a small team. We read every message personally and reply within 24 hours."
         image="/images/lake-dusk.jpg"
         objectPosition="center 55%"
-        height="h-[62vh] min-h-[400px]"
+        height="h-[45vh] sm:h-[62vh] min-h-[280px] sm:min-h-[400px]"
       />
 
       <section className="page-section bg-stone">
         <div className="container-lg">
-          <div className="grid lg:grid-cols-3 gap-12 lg:gap-16">
+          <div className="grid lg:grid-cols-3 gap-8 sm:gap-12 lg:gap-16">
 
             {/* Contact info */}
             <div className="lg:col-span-1">

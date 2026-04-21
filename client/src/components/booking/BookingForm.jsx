@@ -197,10 +197,10 @@ export default function BookingForm({ room, onBookingCreated }) {
                 </div>
                 <div className="flex items-center gap-3">
                   <button type="button" onClick={() => g.set(Math.max(g.min, g.val - 1))}
-                    className="w-7 h-7 rounded-full border border-sage/40 text-timber hover:border-sand hover:text-sand transition-colors" aria-label={`Decrease ${g.label}`}>–</button>
+                    className="w-9 h-9 rounded-full border border-sage/40 text-timber hover:border-sand hover:text-sand transition-colors flex items-center justify-center" aria-label={`Decrease ${g.label}`}>–</button>
                   <span className="font-sans font-semibold text-timber w-4 text-center">{g.val}</span>
                   <button type="button" onClick={() => g.set(Math.min(g.max, g.val + 1))}
-                    className="w-7 h-7 rounded-full border border-sage/40 text-timber hover:border-sand hover:text-sand transition-colors" aria-label={`Increase ${g.label}`}>+</button>
+                    className="w-9 h-9 rounded-full border border-sage/40 text-timber hover:border-sand hover:text-sand transition-colors flex items-center justify-center" aria-label={`Increase ${g.label}`}>+</button>
                 </div>
               </div>
             ))}

@@ -35,7 +35,7 @@ export default function Accommodation() {
         subtitle="Seven distinctive rooms and chalets — each a different expression of wilderness luxury."
         image="/images/jacuzzi-chalet.jpg"
         objectPosition="center 50%"
-        height="h-[72vh] min-h-[460px]"
+        height="h-[50vh] sm:h-[72vh] min-h-[320px] sm:min-h-[460px]"
       />
 
       <section className="page-section bg-stone">

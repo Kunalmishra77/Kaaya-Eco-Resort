@@ -83,13 +83,13 @@ export default function Groups() {
         subtitle="Take over Kaaya entirely. Your family, your celebration, your wild adventure — exclusively yours."
         image="/images/pool-trees.jpg"
         objectPosition="center 50%"
-        height="h-[72vh] min-h-[460px]"
+        height="h-[50vh] sm:h-[72vh] min-h-[320px] sm:min-h-[460px]"
       />
 
       {/* Intro */}
       <section className="page-section bg-stone">
         <div className="container-lg">
-          <div className="grid lg:grid-cols-2 gap-16 items-center mb-24">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center mb-10 sm:mb-16 lg:mb-24">
             <SectionReveal direction="left">
               <p className="section-label mb-4">Private Resort Hire</p>
               <h2 className="section-heading mb-6">

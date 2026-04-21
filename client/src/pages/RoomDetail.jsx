@@ -60,7 +60,7 @@ export default function RoomDetail() {
   return (
     <div className="pb-20 lg:pb-0">
       {/* Image gallery / hero */}
-      <div className="relative h-[60vh] min-h-[400px] bg-forest">
+      <div className="relative h-[45vh] sm:h-[60vh] min-h-[280px] sm:min-h-[400px] bg-forest">
         {room.images?.length > 0 ? (
           <>
             <Swiper
@@ -124,7 +124,7 @@ export default function RoomDetail() {
       {/* Main content */}
       <section className="page-section bg-stone">
         <div className="container-lg">
-          <div className="grid lg:grid-cols-3 gap-12 lg:gap-16">
+          <div className="grid lg:grid-cols-3 gap-8 sm:gap-12 lg:gap-16">
             {/* Left — details */}
             <div className="lg:col-span-2">
               <motion.div

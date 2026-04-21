@@ -52,7 +52,7 @@
     @apply inline-flex items-center justify-center gap-2
            bg-sand text-timber font-sans font-semibold
            uppercase tracking-[0.12em] text-sm
-           px-8 py-3.5 rounded-sm
+           px-6 sm:px-8 py-3.5 rounded-sm
            transition-all duration-300
            hover:bg-timber hover:text-stone
            active:scale-[0.98]
@@ -64,7 +64,7 @@
     @apply inline-flex items-center justify-center gap-2
            border border-sand text-sand font-sans font-semibold
            uppercase tracking-[0.12em] text-sm
-           px-8 py-3.5 rounded-sm
+           px-6 sm:px-8 py-3.5 rounded-sm
            transition-all duration-300
            hover:bg-sand hover:text-timber
            active:scale-[0.98]
@@ -76,7 +76,7 @@
     @apply inline-flex items-center justify-center gap-2
            border border-stone/60 text-stone font-sans font-semibold
            uppercase tracking-[0.12em] text-sm
-           px-8 py-3.5 rounded-sm
+           px-6 sm:px-8 py-3.5 rounded-sm
            transition-all duration-300
            hover:bg-stone hover:text-timber
            active:scale-[0.98];
@@ -89,12 +89,12 @@
 
   /* Section heading */
   .section-heading {
-    @apply font-display text-forest text-4xl md:text-5xl leading-tight;
+    @apply font-display text-forest text-3xl sm:text-4xl md:text-5xl leading-tight;
   }
 
   /* Page section padding */
   .page-section {
-    @apply py-20 md:py-28 px-4 sm:px-6 lg:px-8;
+    @apply py-12 sm:py-20 md:py-28 px-4 sm:px-6 lg:px-8;
   }
 
   /* Max-width container */
@@ -110,7 +110,7 @@
   /* Input base style */
   .input-base {
     @apply w-full bg-white border border-sage/40 text-timber font-sans text-sm
-           px-4 py-3 rounded-sm
+           px-3 sm:px-4 py-3 rounded-sm
            placeholder:text-timber/40
            focus:outline-none focus:border-sand focus:ring-1 focus:ring-sand/50
            transition-colors duration-200;

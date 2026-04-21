@@ -85,14 +85,14 @@ export default function Experiences() {
         subtitle="From leopard safaris at dawn to lake sunsets in the evening — life at Kaaya moves at nature's pace."
         image="/images/lake-sunset-tree.jpg"
         objectPosition="center 68%"
-        height="h-[72vh] min-h-[460px]"
+        height="h-[50vh] sm:h-[72vh] min-h-[320px] sm:min-h-[460px]"
       />
 
       <section className="page-section bg-stone">
         <div className="container-lg space-y-28">
           {EXPERIENCES.map((exp, i) => (
             <SectionReveal key={exp.title} direction={i % 2 === 0 ? 'left' : 'right'} delay={0.05}>
-              <div className={`grid lg:grid-cols-2 gap-12 lg:gap-20 items-center ${i % 2 !== 0 ? 'lg:flex-row-reverse' : ''}`}>
+              <div className={`grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-20 items-center ${i % 2 !== 0 ? 'lg:flex-row-reverse' : ''}`}>
                 {/* Image block */}
                 <div className={`order-1 ${i % 2 !== 0 ? 'lg:order-2' : ''}`}>
                   <div className="relative h-80 rounded-sm overflow-hidden group">

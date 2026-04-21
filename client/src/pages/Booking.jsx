@@ -115,7 +115,7 @@ export default function Booking() {
           {/* Step 1: Booking details */}
           {step === 1 && selectedRoom && (
             <motion.div key="step1" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4 }}>
-              <div className="grid lg:grid-cols-3 gap-12">
+              <div className="grid lg:grid-cols-3 gap-8 sm:gap-12">
                 {/* Form */}
                 <div className="lg:col-span-2">
                   <h1 className="font-display text-timber text-3xl font-semibold mb-2">Your Details</h1>

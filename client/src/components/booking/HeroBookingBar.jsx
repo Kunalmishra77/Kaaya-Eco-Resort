@@ -117,14 +117,14 @@ export default function HeroBookingBar() {
                   <button
                     type="button"
                     onClick={() => setAdults(Math.max(1, adults - 1))}
-                    className="w-7 h-7 rounded-full border border-sage/40 flex items-center justify-center text-timber hover:border-sand hover:text-sand transition-colors"
+                    className="w-9 h-9 sm:w-7 sm:h-7 rounded-full border border-sage/40 flex items-center justify-center text-timber hover:border-sand hover:text-sand transition-colors"
                     aria-label="Decrease adults"
                   >–</button>
                   <span className="font-sans font-semibold text-timber w-4 text-center">{adults}</span>
                   <button
                     type="button"
                     onClick={() => setAdults(Math.min(12, adults + 1))}
-                    className="w-7 h-7 rounded-full border border-sage/40 flex items-center justify-center text-timber hover:border-sand hover:text-sand transition-colors"
+                    className="w-9 h-9 sm:w-7 sm:h-7 rounded-full border border-sage/40 flex items-center justify-center text-timber hover:border-sand hover:text-sand transition-colors"
                     aria-label="Increase adults"
                   >+</button>
                 </div>
@@ -140,14 +140,14 @@ export default function HeroBookingBar() {
                   <button
                     type="button"
                     onClick={() => setChildren(Math.max(0, children - 1))}
-                    className="w-7 h-7 rounded-full border border-sage/40 flex items-center justify-center text-timber hover:border-sand hover:text-sand transition-colors"
+                    className="w-9 h-9 sm:w-7 sm:h-7 rounded-full border border-sage/40 flex items-center justify-center text-timber hover:border-sand hover:text-sand transition-colors"
                     aria-label="Decrease children"
                   >–</button>
                   <span className="font-sans font-semibold text-timber w-4 text-center">{children}</span>
                   <button
                     type="button"
                     onClick={() => setChildren(Math.min(6, children + 1))}
-                    className="w-7 h-7 rounded-full border border-sage/40 flex items-center justify-center text-timber hover:border-sand hover:text-sand transition-colors"
+                    className="w-9 h-9 sm:w-7 sm:h-7 rounded-full border border-sage/40 flex items-center justify-center text-timber hover:border-sand hover:text-sand transition-colors"
                     aria-label="Increase children"
                   >+</button>
                 </div>
