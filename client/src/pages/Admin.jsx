@@ -82,7 +82,7 @@ export default function Admin() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f5f4f0] flex">
+    <div className="h-screen bg-[#f5f4f0] flex overflow-hidden">
 
       {/* ── Sidebar (desktop: static, mobile: drawer) ────────── */}
       {/* Overlay — only covers content area to the right of sidebar, never the sidebar itself */}
@@ -101,9 +101,9 @@ export default function Admin() {
 
       <aside
         className={[
-          'fixed inset-y-0 left-0 z-50 w-64 bg-forest flex flex-col',
+          'fixed inset-y-0 left-0 z-50 w-64 bg-forest flex flex-col overflow-hidden',
           'transform transition-transform duration-300 ease-in-out',
-          'lg:translate-x-0 lg:static lg:z-auto',
+          'lg:translate-x-0 lg:static lg:z-auto lg:h-screen lg:sticky lg:top-0 lg:flex-shrink-0',
           sidebarOpen ? 'translate-x-0' : '-translate-x-full',
         ].join(' ')}
       >
@@ -122,7 +122,7 @@ export default function Admin() {
         </div>
 
         {/* Nav */}
-        <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
+        <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-hidden">
           {TABS.map(navItem)}
         </nav>
 
