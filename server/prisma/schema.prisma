@@ -1,6 +1,8 @@
 // d:/kaaya eco resort/server/prisma/schema.prisma
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  output        = "../../node_modules/.prisma/client"
+  binaryTargets = ["native", "rhel-openssl-1.0.x"]
 }
 
 datasource db {
