@@ -28,6 +28,7 @@ const Booking        = lazy(() => import('./pages/Booking.jsx'))
 const BookingSuccess = lazy(() => import('./pages/BookingSuccess.jsx'))
 const MyBookings     = lazy(() => import('./pages/MyBookings.jsx'))
 const Admin          = lazy(() => import('./pages/Admin.jsx'))
+const ClaimAdmin     = lazy(() => import('./pages/ClaimAdmin.jsx'))
 
 function PageLoader() {
   return (
@@ -71,6 +72,9 @@ export default function App() {
               <Route path="/book"        element={<Booking />} />
               <Route path="/my-bookings" element={<MyBookings />} />
             </Route>
+
+            {/* First-time admin setup — public, self-locks after first admin exists */}
+            <Route path="/claim-admin" element={<ClaimAdmin />} />
 
             {/* Protected admin routes */}
             <Route element={<AdminRoute />}>

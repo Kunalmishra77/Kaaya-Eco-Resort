@@ -90,4 +90,33 @@ router.get('/me', protect, (req, res) => {
   res.json({ user: req.user })
 })
 
+// GET /api/auth/admin-exists — public, tells client whether any admin exists yet
+router.get('/admin-exists', async (_req, res, next) => {
+  try {
+    const count = await prisma.user.count({ where: { role: 'ADMIN' } })
+    res.json({ exists: count > 0 })
+  } catch (err) {
+    next(err)
+  }
+})
+
+// POST /api/auth/claim-admin — promotes the logged-in user to ADMIN
+// Only works when zero ADMIN accounts exist in the database (first-time setup)
+router.post('/claim-admin', protect, async (req, res, next) => {
+  try {
+    const adminCount = await prisma.user.count({ where: { role: 'ADMIN' } })
+    if (adminCount > 0) {
+      return res.status(403).json({ message: 'An admin already exists. Contact the existing admin to grant you access.' })
+    }
+    const user = await prisma.user.update({
+      where: { id: req.user.id },
+      data:  { role: 'ADMIN' },
+      select: { id: true, email: true, firstName: true, lastName: true, role: true },
+    })
+    res.json({ user, message: 'You are now an admin!' })
+  } catch (err) {
+    next(err)
+  }
+})
+
 export default router
