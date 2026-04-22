@@ -7,12 +7,21 @@ const api = axios.create({
   timeout: 15000,
 })
 
-// Attach JWT token to every request
+// Attach JWT — admin session (sessionStorage) takes precedence over regular login
 api.interceptors.request.use((config) => {
+  try {
+    const raw = sessionStorage.getItem('kaaya_admin_session')
+    if (raw) {
+      const { token } = JSON.parse(raw)
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`
+        return config
+      }
+    }
+  } catch { /* ignore */ }
+
   const token = localStorage.getItem('token')
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`
-  }
+  if (token) config.headers.Authorization = `Bearer ${token}`
   return config
 })
 

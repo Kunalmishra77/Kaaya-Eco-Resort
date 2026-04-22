@@ -1,22 +1,25 @@
 // d:/kaaya eco resort/client/src/components/common/AdminRoute.jsx
-import { Navigate, Outlet } from 'react-router-dom'
-import { useSelector } from 'react-redux'
-import Spinner from './Spinner.jsx'
+import { useState } from 'react'
+import { Outlet } from 'react-router-dom'
+import { getAdminSession, setAdminSession, clearAdminSession } from '../../utils/adminAuth.js'
+import AdminLogin from '../../pages/AdminLogin.jsx'
 
 export default function AdminRoute() {
-  const { user, isAuthenticated, loading } = useSelector((s) => s.auth)
+  const [session, setSession] = useState(() => getAdminSession())
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-stone">
-        <Spinner size="lg" />
-      </div>
-    )
+  const handleLogin = (token, user) => {
+    setAdminSession(token, user)
+    setSession({ token, user })
   }
 
-  if (!isAuthenticated || user?.role !== 'ADMIN') {
-    return <Navigate to="/" replace />
+  const handleLogout = () => {
+    clearAdminSession()
+    setSession(null)
   }
 
-  return <Outlet />
+  if (!session) {
+    return <AdminLogin onSuccess={handleLogin} />
+  }
+
+  return <Outlet context={{ adminUser: session.user, adminLogout: handleLogout }} />
 }

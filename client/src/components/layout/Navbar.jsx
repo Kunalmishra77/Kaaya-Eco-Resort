@@ -2,7 +2,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, User, ChevronDown, LogOut, CalendarDays, LayoutDashboard } from 'lucide-react'
 import { logout } from '../../store/slices/authSlice.js'
 
@@ -22,8 +21,8 @@ export default function Navbar() {
   const [mobileOpen,   setMobileOpen]   = useState(false)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
   const userMenuRef = useRef(null)
-  const dispatch  = useDispatch()
-  const navigate  = useNavigate()
+  const dispatch    = useDispatch()
+  const navigate    = useNavigate()
   const { user, isAuthenticated } = useSelector((s) => s.auth)
 
   // Scroll detection
@@ -44,12 +43,18 @@ export default function Navbar() {
     return () => document.removeEventListener('mousedown', handler)
   }, [])
 
-  // Close mobile on resize
+  // Close mobile menu on resize to desktop
   useEffect(() => {
     const onResize = () => { if (window.innerWidth >= 1024) setMobileOpen(false) }
     window.addEventListener('resize', onResize)
     return () => window.removeEventListener('resize', onResize)
   }, [])
+
+  // Prevent body scroll when mobile menu open
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
+  }, [mobileOpen])
 
   const handleLogout = () => {
     dispatch(logout())
@@ -57,36 +62,27 @@ export default function Navbar() {
     navigate('/')
   }
 
-  const navbarClasses = [
-    'fixed top-0 left-0 right-0 z-50 transition-all duration-500',
-    scrolled
-      ? 'bg-forest shadow-lg shadow-forest/20 py-2'
-      : 'bg-transparent py-4',
-  ].join(' ')
-
-  const linkClasses = ({ isActive }) =>
-    [
-      'font-sans text-xs font-semibold uppercase tracking-widest transition-colors duration-200',
-      isActive
-        ? 'text-sand'
-        : 'text-stone/90 hover:text-sand',
-    ].join(' ')
+  const closeMobile = () => setMobileOpen(false)
 
   return (
     <>
-      <nav className={navbarClasses} aria-label="Main navigation">
+      {/* ── Top nav bar ─────────────────────────────────── */}
+      <nav
+        className={[
+          'fixed top-0 left-0 right-0 z-50 transition-all duration-500',
+          scrolled ? 'bg-forest shadow-lg shadow-forest/20 py-2' : 'bg-transparent py-4',
+        ].join(' ')}
+        aria-label="Main navigation"
+      >
         <div className="container-lg flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex-shrink-0" aria-label="Kaaya Eco Resort home">
+          <Link to="/" className="flex-shrink-0" onClick={closeMobile} aria-label="Kaaya Eco Resort home">
             <img
               src="/logo.svg"
               alt="Kaaya Eco Resort"
               className="h-12 sm:h-16 lg:h-20 w-auto"
               style={{ filter: 'drop-shadow(0 1px 4px rgba(0,0,0,0.5))' }}
-              onError={(e) => {
-                e.target.style.display = 'none'
-                e.target.nextSibling.style.display = 'block'
-              }}
+              onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'block' }}
             />
             <span style={{ display: 'none' }} className="font-display text-stone text-base font-semibold tracking-wide">
               Kaaya Eco Resort
@@ -96,7 +92,15 @@ export default function Navbar() {
           {/* Desktop nav links */}
           <div className="hidden lg:flex items-center gap-7">
             {NAV_LINKS.map((link) => (
-              <NavLink key={link.to} to={link.to} className={linkClasses} end={link.to === '/'}>
+              <NavLink
+                key={link.to}
+                to={link.to}
+                end={link.to === '/'}
+                className={({ isActive }) =>
+                  'font-sans text-xs font-semibold uppercase tracking-widest transition-colors duration-200 ' +
+                  (isActive ? 'text-sand' : 'text-stone/90 hover:text-sand')
+                }
+              >
                 {link.label}
               </NavLink>
             ))}
@@ -104,18 +108,17 @@ export default function Navbar() {
 
           {/* Right actions */}
           <div className="flex items-center gap-3">
-            {/* Book Now — always visible on desktop */}
+            {/* Book Now — desktop only */}
             <Link to="/book" className="hidden lg:inline-flex btn-primary py-2.5 px-6 text-xs">
               Book Now
             </Link>
 
-            {/* User menu */}
+            {/* User menu — desktop only */}
             {isAuthenticated ? (
-              <div className="relative" ref={userMenuRef}>
+              <div className="relative hidden lg:block" ref={userMenuRef}>
                 <button
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
-                  className="hidden lg:flex items-center gap-1.5 text-stone/80 hover:text-sand transition-colors duration-200"
-                  aria-label="Account menu"
+                  className="flex items-center gap-1.5 text-stone/80 hover:text-sand transition-colors duration-200"
                   aria-expanded={userMenuOpen}
                 >
                   <User size={18} />
@@ -123,59 +126,41 @@ export default function Navbar() {
                   <ChevronDown size={14} className={`transition-transform ${userMenuOpen ? 'rotate-180' : ''}`} />
                 </button>
 
-                <AnimatePresence>
-                  {userMenuOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 8, scale: 0.95 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 8, scale: 0.95 }}
-                      transition={{ duration: 0.15 }}
-                      className="absolute right-0 top-full mt-2 w-52 bg-white border border-sage/20 rounded-sm shadow-xl z-50"
-                    >
-                      <div className="px-4 py-3 border-b border-sage/20">
-                        <p className="font-sans text-xs text-timber/50 uppercase tracking-wider">Signed in as</p>
-                        <p className="font-sans text-sm font-semibold text-timber truncate">{user?.email}</p>
-                      </div>
-                      <div className="py-1">
-                        <Link
-                          to="/my-bookings"
-                          onClick={() => setUserMenuOpen(false)}
-                          className="flex items-center gap-3 px-4 py-2.5 text-sm text-timber hover:bg-stone hover:text-forest transition-colors"
-                        >
-                          <CalendarDays size={15} /> My Bookings
+                {userMenuOpen && (
+                  <div className="absolute right-0 top-full mt-2 w-52 bg-white border border-sage/20 rounded-lg shadow-xl z-50">
+                    <div className="px-4 py-3 border-b border-sage/20">
+                      <p className="font-sans text-xs text-timber/50 uppercase tracking-wider">Signed in as</p>
+                      <p className="font-sans text-sm font-semibold text-timber truncate">{user?.email}</p>
+                    </div>
+                    <div className="py-1">
+                      <Link to="/my-bookings" onClick={() => setUserMenuOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-timber hover:bg-stone hover:text-forest transition-colors">
+                        <CalendarDays size={15} /> My Bookings
+                      </Link>
+                      {user?.role === 'ADMIN' && (
+                        <Link to="/admin" onClick={() => setUserMenuOpen(false)}
+                          className="flex items-center gap-3 px-4 py-2.5 text-sm text-timber hover:bg-stone hover:text-forest transition-colors">
+                          <LayoutDashboard size={15} /> Admin Panel
                         </Link>
-                        {user?.role === 'ADMIN' && (
-                          <Link
-                            to="/admin"
-                            onClick={() => setUserMenuOpen(false)}
-                            className="flex items-center gap-3 px-4 py-2.5 text-sm text-timber hover:bg-stone hover:text-forest transition-colors"
-                          >
-                            <LayoutDashboard size={15} /> Admin Dashboard
-                          </Link>
-                        )}
-                        <button
-                          onClick={handleLogout}
-                          className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-terra hover:bg-stone transition-colors"
-                        >
-                          <LogOut size={15} /> Sign Out
-                        </button>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                      )}
+                      <button onClick={handleLogout}
+                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-terra hover:bg-stone transition-colors">
+                        <LogOut size={15} /> Sign Out
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             ) : (
-              <Link
-                to="/login"
-                className="hidden lg:inline-flex items-center gap-1.5 font-sans text-sm text-stone/80 hover:text-sand transition-colors duration-200"
-              >
+              <Link to="/login"
+                className="hidden lg:inline-flex items-center gap-1.5 font-sans text-sm text-stone/80 hover:text-sand transition-colors duration-200">
                 <User size={16} /> Sign In
               </Link>
             )}
 
-            {/* Hamburger */}
+            {/* Hamburger — mobile only */}
             <button
-              onClick={() => setMobileOpen(!mobileOpen)}
+              onClick={() => setMobileOpen((v) => !v)}
               className="lg:hidden p-3 text-stone hover:text-sand transition-colors"
               aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={mobileOpen}
@@ -186,102 +171,99 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile menu overlay */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-forest/95 z-40 lg:hidden"
-              onClick={() => setMobileOpen(false)}
-            />
-            <motion.div
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'tween', duration: 0.3 }}
-              className="fixed top-0 right-0 bottom-0 w-full sm:w-80 bg-forest z-50 lg:hidden flex flex-col"
+      {/* ── Mobile menu ───────────────────────────────────── */}
+      {/* Backdrop */}
+      {mobileOpen && (
+        <div
+          className="fixed inset-0 bg-forest/60 z-[60] lg:hidden"
+          onClick={closeMobile}
+        />
+      )}
+
+      {/* Drawer — CSS transition only, NO framer-motion, NO opacity animation */}
+      <div
+        className={[
+          'fixed top-0 right-0 bottom-0 w-full sm:w-80 bg-forest z-[70] lg:hidden',
+          'flex flex-col transition-transform duration-300 ease-in-out',
+          mobileOpen ? 'translate-x-0' : 'translate-x-full',
+        ].join(' ')}
+        aria-hidden={!mobileOpen}
+      >
+        {/* Drawer header */}
+        <div className="flex items-center justify-between px-6 py-5 border-b border-white/10 flex-shrink-0">
+          <img
+            src="/logo.svg"
+            alt="Kaaya Eco Resort"
+            className="h-14 w-auto"
+            style={{ filter: 'drop-shadow(0 1px 3px rgba(0,0,0,0.4))' }}
+          />
+          <button
+            onClick={closeMobile}
+            className="p-2 text-white/50 hover:text-white transition-colors rounded-md"
+            aria-label="Close menu"
+          >
+            <X size={22} />
+          </button>
+        </div>
+
+        {/* Nav links — plain links, no animations that block pointer-events */}
+        <nav className="flex-1 overflow-y-auto py-4 px-4">
+          {NAV_LINKS.map((link) => (
+            <NavLink
+              key={link.to}
+              to={link.to}
+              end={link.to === '/'}
+              onClick={closeMobile}
+              className={({ isActive }) =>
+                'flex items-center py-3.5 px-3 rounded-lg font-sans text-base font-medium border-b border-white/8 transition-colors ' +
+                (isActive ? 'text-sand' : 'text-white/80 hover:text-white active:text-sand')
+              }
             >
-              <div className="flex items-center justify-between p-6 border-b border-stone/10">
-                <div>
-                  <img src="/logo.svg" alt="Kaaya Eco Resort" className="h-16 w-auto" style={{ filter: 'drop-shadow(0 1px 3px rgba(0,0,0,0.4))' }} />
-                </div>
-                <button
-                  onClick={() => setMobileOpen(false)}
-                  className="p-2 text-stone/60 hover:text-stone transition-colors"
-                  aria-label="Close menu"
-                >
-                  <X size={22} />
-                </button>
-              </div>
+              {link.label}
+            </NavLink>
+          ))}
+        </nav>
 
-              <nav className="flex-1 overflow-y-auto py-6 px-6">
-                {NAV_LINKS.map((link) => (
-                  <NavLink
-                    key={link.to}
-                    to={link.to}
-                    end={link.to === '/'}
-                    onClick={() => setMobileOpen(false)}
-                    className={({ isActive }) =>
-                      `block py-3.5 font-sans text-base font-medium border-b border-stone/10 transition-colors ${
-                        isActive ? 'text-sand' : 'text-stone/80 hover:text-sand'
-                      }`
-                    }
-                  >
-                    {link.label}
-                  </NavLink>
-                ))}
-              </nav>
+        {/* Footer actions */}
+        <div className="px-4 py-5 border-t border-white/10 space-y-3 flex-shrink-0">
+          <Link
+            to="/book"
+            onClick={closeMobile}
+            className="btn-primary w-full justify-center"
+          >
+            Book Now
+          </Link>
 
-              <div className="p-6 border-t border-stone/10 space-y-3">
-                <Link
-                  to="/book"
-                  onClick={() => setMobileOpen(false)}
-                  className="btn-primary w-full justify-center"
-                >
-                  Book Now
+          {isAuthenticated ? (
+            <div className="space-y-1 pt-1">
+              <p className="font-sans text-white/30 text-[10px] uppercase tracking-widest px-3 pb-1">
+                {user?.firstName} {user?.lastName}
+              </p>
+              <Link to="/my-bookings" onClick={closeMobile}
+                className="flex items-center gap-2.5 text-white/70 hover:text-white text-sm font-sans py-2.5 px-3 rounded-lg hover:bg-white/8 transition-colors">
+                <CalendarDays size={15} /> My Bookings
+              </Link>
+              {user?.role === 'ADMIN' && (
+                <Link to="/admin" onClick={closeMobile}
+                  className="flex items-center gap-2.5 text-white/70 hover:text-white text-sm font-sans py-2.5 px-3 rounded-lg hover:bg-white/8 transition-colors">
+                  <LayoutDashboard size={15} /> Admin Panel
                 </Link>
-                {isAuthenticated ? (
-                  <div className="space-y-2">
-                    <Link
-                      to="/my-bookings"
-                      onClick={() => setMobileOpen(false)}
-                      className="flex items-center gap-2 text-stone/70 hover:text-stone text-sm font-sans py-2"
-                    >
-                      <CalendarDays size={15} /> My Bookings
-                    </Link>
-                    {user?.role === 'ADMIN' && (
-                      <Link
-                        to="/admin"
-                        onClick={() => setMobileOpen(false)}
-                        className="flex items-center gap-2 text-stone/70 hover:text-stone text-sm font-sans py-2"
-                      >
-                        <LayoutDashboard size={15} /> Admin Dashboard
-                      </Link>
-                    )}
-                    <button
-                      onClick={() => { handleLogout(); setMobileOpen(false) }}
-                      className="flex items-center gap-2 text-terra text-sm font-sans py-2"
-                    >
-                      <LogOut size={15} /> Sign Out
-                    </button>
-                  </div>
-                ) : (
-                  <Link
-                    to="/login"
-                    onClick={() => setMobileOpen(false)}
-                    className="btn-outline w-full justify-center"
-                  >
-                    Sign In
-                  </Link>
-                )}
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+              )}
+              <button
+                onClick={() => { handleLogout(); closeMobile() }}
+                className="flex items-center gap-2.5 text-terra text-sm font-sans py-2.5 px-3 rounded-lg hover:bg-white/5 transition-colors w-full"
+              >
+                <LogOut size={15} /> Sign Out
+              </button>
+            </div>
+          ) : (
+            <Link to="/login" onClick={closeMobile}
+              className="btn-outline-white w-full justify-center">
+              Sign In
+            </Link>
+          )}
+        </div>
+      </div>
     </>
   )
 }
