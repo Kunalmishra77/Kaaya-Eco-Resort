@@ -218,26 +218,20 @@ export default function Navbar() {
               </div>
 
               <nav className="flex-1 overflow-y-auto py-6 px-6">
-                {NAV_LINKS.map((link, i) => (
-                  <motion.div
+                {NAV_LINKS.map((link) => (
+                  <NavLink
                     key={link.to}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.05 }}
+                    to={link.to}
+                    end={link.to === '/'}
+                    onClick={() => setMobileOpen(false)}
+                    className={({ isActive }) =>
+                      `block py-3.5 font-sans text-base font-medium border-b border-stone/10 transition-colors ${
+                        isActive ? 'text-sand' : 'text-stone/80 hover:text-sand'
+                      }`
+                    }
                   >
-                    <NavLink
-                      to={link.to}
-                      end={link.to === '/'}
-                      onClick={() => setMobileOpen(false)}
-                      className={({ isActive }) =>
-                        `block py-3.5 font-sans text-base font-medium border-b border-stone/10 transition-colors ${
-                          isActive ? 'text-sand' : 'text-stone/80 hover:text-sand'
-                        }`
-                      }
-                    >
-                      {link.label}
-                    </NavLink>
-                  </motion.div>
+                    {link.label}
+                  </NavLink>
                 ))}
               </nav>
 

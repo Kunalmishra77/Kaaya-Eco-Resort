@@ -85,15 +85,16 @@ export default function Admin() {
     <div className="min-h-screen bg-[#f5f4f0] flex">
 
       {/* ── Sidebar (desktop: static, mobile: drawer) ────────── */}
+      {/* Overlay — only covers content area to the right of sidebar, never the sidebar itself */}
       <AnimatePresence>
-        {(sidebarOpen) && (
+        {sidebarOpen && (
           <motion.div
             key="overlay"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setSidebarOpen(false)}
-            className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+            className="fixed inset-y-0 left-64 right-0 bg-black/50 z-40 lg:hidden"
           />
         )}
       </AnimatePresence>
