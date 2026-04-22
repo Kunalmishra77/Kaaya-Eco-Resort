@@ -6,7 +6,7 @@ import api from '../../utils/api.js'
 import { formatPrice, ROOM_TYPE_LABELS } from '../../utils/helpers.js'
 import Spinner from '../common/Spinner.jsx'
 
-const ROOM_TYPES  = ['FAMILY_ROOM', 'FAMILY_CHALET', 'STANDARD_CHALET']
+const ROOM_TYPES   = ['FAMILY_ROOM', 'FAMILY_CHALET', 'STANDARD_CHALET']
 const DEFAULT_FORM = {
   name: '', slug: '', type: 'STANDARD_CHALET', description: '', longDescription: '',
   pricePerNight: '', maxAdults: '', maxChildren: '0', bedCount: '1',
@@ -20,7 +20,7 @@ export default function RoomManager() {
   const [form,        setForm]        = useState(DEFAULT_FORM)
   const [saving,      setSaving]      = useState(false)
   const [isNew,       setIsNew]       = useState(false)
-  const [imgPanel,    setImgPanel]    = useState(null)   // roomId whose images are open
+  const [imgPanel,    setImgPanel]    = useState(null)
   const [newImageUrl, setNewImageUrl] = useState('')
   const [savingImg,   setSavingImg]   = useState(false)
 
@@ -51,12 +51,7 @@ export default function RoomManager() {
     })
   }
 
-  const startNew = () => {
-    setEditing('new')
-    setIsNew(true)
-    setImgPanel(null)
-    setForm(DEFAULT_FORM)
-  }
+  const startNew = () => { setEditing('new'); setIsNew(true); setImgPanel(null); setForm(DEFAULT_FORM) }
 
   const handleSave = async (e) => {
     e.preventDefault()
@@ -106,8 +101,8 @@ export default function RoomManager() {
     if (!url) return
     setSavingImg(true)
     try {
-      const room    = rooms.find((r) => r.id === roomId)
-      const images  = [...(room.images || []), url]
+      const room   = rooms.find((r) => r.id === roomId)
+      const images = [...(room.images || []), url]
       const { data } = await api.put(`/admin/rooms/${roomId}`, { images })
       setRooms((prev) => prev.map((r) => r.id === roomId ? { ...r, images: data.room.images } : r))
       setNewImageUrl('')
@@ -131,179 +126,179 @@ export default function RoomManager() {
     }
   }
 
-  if (loading) return <div className="flex justify-center py-12"><Spinner size="lg" /></div>
+  if (loading) return <div className="flex justify-center py-16"><Spinner size="lg" /></div>
+
+  const F = ({ label, required, children }) => (
+    <div>
+      <label className="block font-sans text-xs font-medium text-timber/50 mb-1.5">
+        {label}{required && <span className="text-terra ml-0.5">*</span>}
+      </label>
+      {children}
+    </div>
+  )
 
   return (
     <div>
-      <div className="flex justify-end mb-6">
+      <div className="flex justify-end mb-5">
         <button onClick={startNew} className="btn-primary py-2 px-4 text-xs gap-1.5">
           <Plus size={14} /> Add Room
         </button>
       </div>
 
-      {/* Inline edit form */}
+      {/* Edit form */}
       {editing && (
-        <form onSubmit={handleSave} className="bg-stone border border-sage/20 rounded-sm p-6 mb-6 space-y-4">
-          <div className="flex items-center justify-between">
-            <p className="font-display text-timber text-lg font-semibold">{isNew ? 'New Room' : 'Edit Room'}</p>
-            <button type="button" onClick={() => setEditing(null)}><X size={18} className="text-timber/50 hover:text-timber" /></button>
-          </div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div>
-              <label className="block font-sans text-xs text-timber/50 mb-1">Name *</label>
-              <input type="text" value={form.name} onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))} className="input-base" required />
-            </div>
-            <div>
-              <label className="block font-sans text-xs text-timber/50 mb-1">Slug</label>
-              <input type="text" value={form.slug} onChange={(e) => setForm((p) => ({ ...p, slug: e.target.value }))} className="input-base" placeholder="auto-generated" />
-            </div>
-            <div>
-              <label className="block font-sans text-xs text-timber/50 mb-1">Type</label>
-              <select value={form.type} onChange={(e) => setForm((p) => ({ ...p, type: e.target.value }))} className="input-base">
-                {ROOM_TYPES.map((t) => <option key={t} value={t}>{ROOM_TYPE_LABELS[t]}</option>)}
-              </select>
-            </div>
-            <div>
-              <label className="block font-sans text-xs text-timber/50 mb-1">Price / night (LKR) *</label>
-              <input type="number" value={form.pricePerNight} onChange={(e) => setForm((p) => ({ ...p, pricePerNight: e.target.value }))} className="input-base" required min="0" />
-            </div>
-            <div>
-              <label className="block font-sans text-xs text-timber/50 mb-1">Max Adults *</label>
-              <input type="number" value={form.maxAdults} onChange={(e) => setForm((p) => ({ ...p, maxAdults: e.target.value }))} className="input-base" required min="1" />
-            </div>
-            <div>
-              <label className="block font-sans text-xs text-timber/50 mb-1">Max Children</label>
-              <input type="number" value={form.maxChildren} onChange={(e) => setForm((p) => ({ ...p, maxChildren: e.target.value }))} className="input-base" min="0" />
-            </div>
-            <div>
-              <label className="block font-sans text-xs text-timber/50 mb-1">Bed Count</label>
-              <input type="number" value={form.bedCount} onChange={(e) => setForm((p) => ({ ...p, bedCount: e.target.value }))} className="input-base" min="1" />
-            </div>
-            <div className="flex items-center gap-4 pt-5">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" checked={form.featured} onChange={(e) => setForm((p) => ({ ...p, featured: e.target.checked }))} className="accent-sand" />
-                <span className="font-sans text-sm text-timber">Featured</span>
-              </label>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" checked={form.active} onChange={(e) => setForm((p) => ({ ...p, active: e.target.checked }))} className="accent-sand" />
-                <span className="font-sans text-sm text-timber">Active</span>
-              </label>
-            </div>
-          </div>
-
-          <div>
-            <label className="block font-sans text-xs text-timber/50 mb-1">Short Description</label>
-            <textarea value={form.description} onChange={(e) => setForm((p) => ({ ...p, description: e.target.value }))} rows={2} className="input-base resize-none" />
-          </div>
-
-          <div>
-            <label className="block font-sans text-xs text-timber/50 mb-1">Long Description</label>
-            <textarea value={form.longDescription} onChange={(e) => setForm((p) => ({ ...p, longDescription: e.target.value }))} rows={4} className="input-base resize-none" />
-          </div>
-
-          <div>
-            <label className="block font-sans text-xs text-timber/50 mb-1">Amenities (comma-separated)</label>
-            <input type="text" value={form.amenities} onChange={(e) => setForm((p) => ({ ...p, amenities: e.target.value }))} className="input-base" placeholder="Air conditioning, Wi-Fi, Hot water, Jacuzzi" />
-          </div>
-
-          <div className="flex gap-3">
-            <button type="submit" disabled={saving} className="btn-primary py-2 px-5 text-xs gap-2 disabled:opacity-60">
-              {saving ? <Spinner size="sm" color="white" /> : <Save size={13} />}
-              {saving ? 'Saving…' : 'Save Room'}
+        <div className="bg-white border border-sage/20 rounded-lg p-5 mb-5 shadow-sm">
+          <div className="flex items-center justify-between mb-5">
+            <h3 className="font-display text-timber text-lg font-semibold">{isNew ? 'New Room' : 'Edit Room'}</h3>
+            <button type="button" onClick={() => setEditing(null)} className="p-1.5 text-timber/40 hover:text-timber transition-colors rounded-md hover:bg-stone">
+              <X size={16} />
             </button>
-            <button type="button" onClick={() => setEditing(null)} className="btn-outline py-2 px-5 text-xs">Cancel</button>
           </div>
-        </form>
+          <form onSubmit={handleSave} className="space-y-4">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <F label="Name" required>
+                <input type="text" value={form.name} onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))} className="input-base" required />
+              </F>
+              <F label="Slug">
+                <input type="text" value={form.slug} onChange={(e) => setForm((p) => ({ ...p, slug: e.target.value }))} className="input-base" placeholder="auto-generated" />
+              </F>
+              <F label="Type">
+                <select value={form.type} onChange={(e) => setForm((p) => ({ ...p, type: e.target.value }))} className="input-base">
+                  {ROOM_TYPES.map((t) => <option key={t} value={t}>{ROOM_TYPE_LABELS[t]}</option>)}
+                </select>
+              </F>
+              <F label="Price / night (LKR)" required>
+                <input type="number" value={form.pricePerNight} onChange={(e) => setForm((p) => ({ ...p, pricePerNight: e.target.value }))} className="input-base" required min="0" />
+              </F>
+              <F label="Max Adults" required>
+                <input type="number" value={form.maxAdults} onChange={(e) => setForm((p) => ({ ...p, maxAdults: e.target.value }))} className="input-base" required min="1" />
+              </F>
+              <F label="Max Children">
+                <input type="number" value={form.maxChildren} onChange={(e) => setForm((p) => ({ ...p, maxChildren: e.target.value }))} className="input-base" min="0" />
+              </F>
+              <F label="Bed Count">
+                <input type="number" value={form.bedCount} onChange={(e) => setForm((p) => ({ ...p, bedCount: e.target.value }))} className="input-base" min="1" />
+              </F>
+              <div className="flex items-end gap-6 pb-1">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" checked={form.featured} onChange={(e) => setForm((p) => ({ ...p, featured: e.target.checked }))} className="w-4 h-4 accent-sand rounded" />
+                  <span className="font-sans text-sm text-timber">Featured</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" checked={form.active} onChange={(e) => setForm((p) => ({ ...p, active: e.target.checked }))} className="w-4 h-4 accent-forest rounded" />
+                  <span className="font-sans text-sm text-timber">Active</span>
+                </label>
+              </div>
+            </div>
+
+            <F label="Short Description">
+              <textarea value={form.description} onChange={(e) => setForm((p) => ({ ...p, description: e.target.value }))} rows={2} className="input-base resize-none" />
+            </F>
+
+            <F label="Long Description">
+              <textarea value={form.longDescription} onChange={(e) => setForm((p) => ({ ...p, longDescription: e.target.value }))} rows={4} className="input-base resize-none" />
+            </F>
+
+            <F label="Amenities (comma-separated)">
+              <input type="text" value={form.amenities} onChange={(e) => setForm((p) => ({ ...p, amenities: e.target.value }))} className="input-base" placeholder="Air conditioning, Wi-Fi, Hot water, Jacuzzi" />
+            </F>
+
+            <div className="flex gap-3 pt-1">
+              <button type="submit" disabled={saving} className="btn-primary py-2 px-5 text-xs gap-2 disabled:opacity-60">
+                {saving ? <Spinner size="sm" color="white" /> : <Save size={13} />}
+                {saving ? 'Saving…' : 'Save Room'}
+              </button>
+              <button type="button" onClick={() => setEditing(null)} className="btn-outline py-2 px-5 text-xs">Cancel</button>
+            </div>
+          </form>
+        </div>
       )}
 
       {/* Rooms list */}
       <div className="space-y-3">
         {rooms.map((room) => (
-          <div key={room.id} className="bg-white border border-sage/20 rounded-sm overflow-hidden">
-            {/* Room row */}
-            <div className="p-5 flex items-center gap-4 flex-wrap">
+          <div key={room.id} className="bg-white border border-sage/20 rounded-lg overflow-hidden">
+            <div className="p-4 flex items-center gap-4">
               {/* Thumbnail */}
-              <div className="w-14 h-14 rounded-sm overflow-hidden flex-shrink-0 bg-stone">
+              <div className="w-14 h-14 rounded-md overflow-hidden flex-shrink-0 bg-stone border border-sage/20">
                 {room.images?.[0]
                   ? <img src={room.images[0]} alt={room.name} className="w-full h-full object-cover" />
-                  : <div className="w-full h-full flex items-center justify-center"><Image size={16} className="text-sage/50" /></div>
+                  : <div className="w-full h-full flex items-center justify-center"><Image size={16} className="text-sage/40" /></div>
                 }
               </div>
 
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="badge bg-forest/10 text-forest text-[10px]">{ROOM_TYPE_LABELS[room.type]}</span>
-                  {room.featured && <span className="badge bg-sand/20 text-timber text-[10px]">Featured</span>}
-                  {!room.active  && <span className="badge bg-gray-100 text-gray-500 text-[10px]">Inactive</span>}
+                <div className="flex items-center gap-2 mb-1 flex-wrap">
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-forest/10 text-forest text-[10px] font-medium">{ROOM_TYPE_LABELS[room.type]}</span>
+                  {room.featured && <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-sand/20 text-timber text-[10px] font-medium">Featured</span>}
+                  {!room.active  && <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-gray-100 text-gray-500 text-[10px] font-medium">Inactive</span>}
                 </div>
-                <p className="font-sans font-semibold text-timber text-sm">{room.name}</p>
-                <p className="font-display text-forest text-lg font-semibold">
+                <p className="font-sans font-semibold text-timber text-sm leading-tight">{room.name}</p>
+                <p className="font-display text-forest text-base font-semibold">
                   {formatPrice(room.pricePerNight)}
-                  <span className="font-sans text-xs text-timber/40 font-normal">/night</span>
+                  <span className="font-sans text-xs text-timber/35 font-normal ml-1">/night</span>
                 </p>
               </div>
 
-              <div className="flex items-center gap-2">
-                {/* Images toggle */}
+              <div className="flex items-center gap-2 flex-shrink-0">
                 <button
                   onClick={() => setImgPanel(imgPanel === room.id ? null : room.id)}
-                  className="flex items-center gap-1.5 border border-sage/40 rounded-sm px-3 py-1.5 text-xs text-timber/60 hover:border-forest hover:text-forest transition-colors"
+                  className="flex items-center gap-1.5 border border-sage/40 rounded-md px-3 py-1.5 text-xs font-sans text-timber/60 hover:border-forest hover:text-forest transition-colors bg-white"
                 >
                   <Image size={12} />
-                  {room.images?.length || 0} img
+                  <span className="hidden sm:inline">{room.images?.length || 0} img</span>
+                  <span className="sm:hidden">{room.images?.length || 0}</span>
                   {imgPanel === room.id ? <ChevronUp size={11} /> : <ChevronDown size={11} />}
                 </button>
 
                 <button
                   onClick={() => toggleActive(room.id, room.active)}
-                  className={`p-2 rounded-sm transition-colors ${room.active ? 'text-green-600 hover:bg-green-50' : 'text-gray-400 hover:bg-gray-50'}`}
+                  className={`p-2 rounded-md transition-colors ${room.active ? 'text-emerald-600 hover:bg-emerald-50' : 'text-gray-400 hover:bg-gray-50'}`}
                   title={room.active ? 'Deactivate' : 'Activate'}
                 >
                   {room.active ? <ToggleRight size={20} /> : <ToggleLeft size={20} />}
                 </button>
 
-                <button onClick={() => startEdit(room)} className="p-2 text-timber/50 hover:text-sand transition-colors" aria-label="Edit room">
-                  <Edit2 size={16} />
+                <button
+                  onClick={() => startEdit(room)}
+                  className="p-2 text-timber/40 hover:text-sand transition-colors rounded-md hover:bg-stone"
+                  title="Edit room"
+                >
+                  <Edit2 size={15} />
                 </button>
               </div>
             </div>
 
-            {/* Image manager panel */}
+            {/* Image panel */}
             {imgPanel === room.id && (
-              <div className="border-t border-sage/20 bg-stone p-5">
-                <p className="font-sans text-xs uppercase tracking-wider text-timber/40 mb-3">Room Images</p>
-
-                {/* Existing images */}
+              <div className="border-t border-sage/20 bg-stone/60 p-4">
+                <p className="font-sans text-[10px] uppercase tracking-wider text-timber/40 mb-3 font-semibold">Room Images</p>
                 {room.images?.length > 0 ? (
                   <div className="flex flex-wrap gap-3 mb-4">
                     {room.images.map((url, idx) => (
-                      <div key={idx} className="relative group w-20 h-20 rounded-sm overflow-hidden border border-sage/30">
+                      <div key={idx} className="relative group w-20 h-20 rounded-md overflow-hidden border border-sage/30">
                         <img src={url} alt={`${room.name} ${idx + 1}`} className="w-full h-full object-cover" />
                         <button
                           onClick={() => removeImage(room.id, idx)}
-                          className="absolute inset-0 bg-terra/70 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"
-                          aria-label="Remove image"
+                          className="absolute inset-0 bg-terra/80 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"
                         >
                           <Trash2 size={14} className="text-white" />
                         </button>
                         {idx === 0 && (
-                          <span className="absolute bottom-0 left-0 right-0 bg-forest/70 text-stone text-[9px] text-center py-0.5">Cover</span>
+                          <span className="absolute bottom-0 left-0 right-0 bg-forest/70 text-white text-[9px] text-center py-0.5">Cover</span>
                         )}
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <p className="font-sans text-xs text-timber/40 mb-4">No images yet. Add image URLs below.</p>
+                  <p className="font-sans text-xs text-timber/40 mb-4">No images yet.</p>
                 )}
-
-                {/* Add image URL */}
                 <div className="flex gap-2">
                   <input
                     type="url"
                     value={newImageUrl}
                     onChange={(e) => setNewImageUrl(e.target.value)}
-                    placeholder="https://res.cloudinary.com/… or /images/room.jpg"
+                    placeholder="https://res.cloudinary.com/…"
                     className="input-base flex-1 text-xs"
                     onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addImage(room.id) } }}
                   />

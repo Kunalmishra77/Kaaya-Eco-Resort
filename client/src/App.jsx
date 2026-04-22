@@ -76,10 +76,11 @@ export default function App() {
             {/* First-time admin setup — public, self-locks after first admin exists */}
             <Route path="/claim-admin" element={<ClaimAdmin />} />
 
-            {/* Protected admin routes */}
-            <Route element={<AdminRoute />}>
-              <Route path="/admin" element={<Admin />} />
-            </Route>
+          </Route>
+
+          {/* Admin — own full-page layout, no site nav/footer */}
+          <Route element={<AdminRoute />}>
+            <Route path="/admin" element={<Admin />} />
           </Route>
         </Routes>
       </Suspense>
