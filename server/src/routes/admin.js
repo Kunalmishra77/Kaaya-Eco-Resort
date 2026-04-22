@@ -291,4 +291,126 @@ router.patch('/inquiries/:id/read', async (req, res, next) => {
   }
 })
 
+// ── Analytics ─────────────────────────────────────────────────────────────────
+
+// GET /api/admin/analytics — last 6 months revenue + bookings per month
+router.get('/analytics', async (_req, res, next) => {
+  try {
+    const now    = new Date()
+    const months = []
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1)
+      months.push({
+        year:  d.getFullYear(),
+        month: d.getMonth() + 1,
+        label: d.toLocaleString('en', { month: 'short' }) + ' ' + String(d.getFullYear()).slice(2),
+        start: new Date(d.getFullYear(), d.getMonth(), 1),
+        end:   new Date(d.getFullYear(), d.getMonth() + 1, 0, 23, 59, 59),
+      })
+    }
+
+    const monthlyData = await Promise.all(
+      months.map(async (m) => {
+        const [bookings, revenue] = await Promise.all([
+          prisma.booking.count({
+            where: { createdAt: { gte: m.start, lte: m.end } },
+          }),
+          prisma.booking.aggregate({
+            where: { createdAt: { gte: m.start, lte: m.end }, status: 'CONFIRMED' },
+            _sum: { totalPrice: true },
+          }),
+        ])
+        return {
+          label:    m.label,
+          bookings,
+          revenue:  revenue._sum.totalPrice || 0,
+        }
+      })
+    )
+
+    // Top rooms by confirmed bookings
+    const topRooms = await prisma.booking.groupBy({
+      by: ['roomId'],
+      where: { status: 'CONFIRMED' },
+      _count: { id: true },
+      _sum:   { totalPrice: true },
+      orderBy: { _count: { id: 'desc' } },
+      take: 5,
+    })
+
+    const roomIds   = topRooms.map((r) => r.roomId)
+    const roomNames = await prisma.room.findMany({
+      where: { id: { in: roomIds } },
+      select: { id: true, name: true },
+    })
+    const nameMap = Object.fromEntries(roomNames.map((r) => [r.id, r.name]))
+
+    const topRoomsWithNames = topRooms.map((r) => ({
+      name:     nameMap[r.roomId] || r.roomId,
+      bookings: r._count.id,
+      revenue:  r._sum.totalPrice || 0,
+    }))
+
+    // Recent 5 bookings
+    const recentBookings = await prisma.booking.findMany({
+      take: 5,
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true, guestName: true, totalPrice: true, status: true, createdAt: true,
+        room: { select: { name: true } },
+      },
+    })
+
+    res.json({ monthlyData, topRooms: topRoomsWithNames, recentBookings })
+  } catch (err) {
+    next(err)
+  }
+})
+
+// ── Users ──────────────────────────────────────────────────────────────────────
+
+// GET /api/admin/users
+router.get('/users', async (req, res, next) => {
+  try {
+    const { page = 1, limit = 20 } = req.query
+    const skip = (Number(page) - 1) * Number(limit)
+
+    const [users, total] = await Promise.all([
+      prisma.user.findMany({
+        skip,
+        take: Number(limit),
+        select: {
+          id: true, email: true, firstName: true, lastName: true,
+          phone: true, role: true, createdAt: true,
+          _count: { select: { bookings: true, reviews: true } },
+        },
+        orderBy: { createdAt: 'desc' },
+      }),
+      prisma.user.count(),
+    ])
+
+    res.json({ users, total, totalPages: Math.ceil(total / Number(limit)) })
+  } catch (err) {
+    next(err)
+  }
+})
+
+// PATCH /api/admin/users/:id/role
+router.patch('/users/:id/role', async (req, res, next) => {
+  try {
+    const { role } = req.body
+    if (!['GUEST', 'ADMIN'].includes(role)) {
+      return res.status(400).json({ message: 'Invalid role' })
+    }
+    const user = await prisma.user.update({
+      where: { id: req.params.id },
+      data:  { role },
+      select: { id: true, email: true, role: true },
+    })
+    res.json({ user })
+  } catch (err) {
+    next(err)
+  }
+})
+
 export default router
