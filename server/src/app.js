@@ -30,16 +30,14 @@ app.use(helmet({
 }))
 app.use(cors({
   origin: (origin, cb) => {
-    const allowed = [
-      process.env.CLIENT_URL,
-      'http://localhost:5173',
-      'https://kaayaecoresort.com',
-      'https://www.kaayaecoresort.com',
-    ].filter(Boolean)
-    // Allow Vercel preview URLs and same-origin requests (origin = undefined)
-    if (!origin || allowed.includes(origin) || /\.vercel\.app$/.test(origin)) {
-      return cb(null, true)
-    }
+    // No origin = same-origin request (browser static asset fetch, curl, etc.) — always allow
+    if (!origin) return cb(null, true)
+    // Allow the production domain (http or https, www or bare)
+    if (/^https?:\/\/(www\.)?kaayaecoresort\.com(:\d+)?$/.test(origin)) return cb(null, true)
+    // Allow local dev and Vercel previews
+    if (origin === 'http://localhost:5173' || /\.vercel\.app$/.test(origin)) return cb(null, true)
+    // Allow whatever CLIENT_URL env var says (handles any custom domain)
+    if (process.env.CLIENT_URL && origin === process.env.CLIENT_URL) return cb(null, true)
     cb(new Error('Not allowed by CORS'))
   },
   credentials: true,
