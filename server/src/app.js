@@ -1,4 +1,3 @@
-// d:/kaaya eco resort/server/src/app.js
 import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
@@ -23,56 +22,45 @@ import adminRoutes    from './routes/admin.js'
 import errorHandler   from './middleware/errorHandler.js'
 
 const app = express()
+const clientDist = path.join(__dirname, '../../client/dist')
+const isProd     = process.env.NODE_ENV === 'production'
 
-// Security
-app.use(helmet({
-  crossOriginResourcePolicy: { policy: 'cross-origin' },
-}))
-app.use(cors({
-  origin: (origin, cb) => {
-    // No origin = same-origin request (browser static asset fetch, curl, etc.) — always allow
-    if (!origin) return cb(null, true)
-    // Allow the production domain (http or https, www or bare)
-    if (/^https?:\/\/(www\.)?kaayaecoresort\.com(:\d+)?$/.test(origin)) return cb(null, true)
-    // Allow local dev and Vercel previews
-    if (origin === 'http://localhost:5173' || /\.vercel\.app$/.test(origin)) return cb(null, true)
-    // Allow whatever CLIENT_URL env var says (handles any custom domain)
-    if (process.env.CLIENT_URL && origin === process.env.CLIENT_URL) return cb(null, true)
-    cb(new Error('Not allowed by CORS'))
-  },
-  credentials: true,
-}))
+// ── 1. Static files — serve BEFORE any middleware (no CORS needed) ────────────
+if (isProd && existsSync(clientDist)) {
+  app.use(express.static(clientDist))
+}
 
-// Stripe webhook needs raw body — mount BEFORE express.json()
+// ── 2. Security & CORS (API only) ─────────────────────────────────────────────
+app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }))
+app.use(compression())
+
+// CORS: allow all origins — API is protected by JWT, not CORS
+app.use('/api', cors({ origin: true, credentials: true }))
+
+// ── 3. Stripe webhook needs raw body — mount BEFORE express.json() ────────────
 app.use('/api/payments/webhook', express.raw({ type: 'application/json' }))
 
-// Body parsing
+// ── 4. Body parsing ───────────────────────────────────────────────────────────
 app.use(express.json({ limit: '10mb' }))
 app.use(express.urlencoded({ extended: true, limit: '10mb' }))
 
-// Utilities
-app.use(compression())
-if (process.env.NODE_ENV !== 'production') {
-  app.use(morgan('dev'))
-}
+if (!isProd) app.use(morgan('dev'))
 
-// Health check — also tests DB connectivity
+// ── 5. Health check ───────────────────────────────────────────────────────────
 app.get('/api/health', async (_req, res) => {
   const health = { status: 'ok', timestamp: new Date().toISOString(), db: 'unknown' }
   try {
-    const { PrismaClient } = await import('@prisma/client')
-    const p = new PrismaClient()
-    await p.$queryRaw`SELECT 1`
-    await p.$disconnect()
+    const { default: pool } = await import('./lib/db.js')
+    await pool.execute('SELECT 1')
     health.db = 'connected'
   } catch (e) {
-    health.db = 'error: ' + e.message
+    health.db    = 'error: ' + e.message
     health.status = 'degraded'
   }
   res.json(health)
 })
 
-// Routes
+// ── 6. API routes ─────────────────────────────────────────────────────────────
 app.use('/api/auth',      authRoutes)
 app.use('/api/rooms',     roomRoutes)
 app.use('/api/bookings',  bookingRoutes)
@@ -82,10 +70,8 @@ app.use('/api/reviews',   reviewRoutes)
 app.use('/api/inquiries', inquiryRoutes)
 app.use('/api/admin',     adminRoutes)
 
-// In production, serve the built React frontend
-const clientDist = path.join(__dirname, '../../client/dist')
-if (process.env.NODE_ENV === 'production' && existsSync(clientDist)) {
-  app.use(express.static(clientDist))
+// ── 7. SPA fallback for all non-API routes ────────────────────────────────────
+if (isProd && existsSync(clientDist)) {
   app.get('*', (req, res) => {
     if (req.path.startsWith('/api/')) {
       res.status(404).json({ message: 'Route not found' })
@@ -94,12 +80,10 @@ if (process.env.NODE_ENV === 'production' && existsSync(clientDist)) {
     }
   })
 } else {
-  app.use((_req, res) => {
-    res.status(404).json({ message: 'Route not found' })
-  })
+  app.use((_req, res) => res.status(404).json({ message: 'Route not found' }))
 }
 
-// Error handler
+// ── 8. Error handler ──────────────────────────────────────────────────────────
 app.use(errorHandler)
 
 export default app
