@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently \"npm run dev --prefix client\" \"npm run dev --prefix server\"",
-    "build": "npm install --prefix client --include=dev && npm run build --prefix client && npx prisma db push --schema=server/prisma/schema.prisma --accept-data-loss && node server/prisma/seed.js",
-    "start": "node server/src/index.js",
+    "build": "npm install --prefix client --include=dev && npm run build --prefix client",
+    "start": "npx prisma db push --schema=server/prisma/schema.prisma --accept-data-loss && node server/prisma/seed.js && node server/src/index.js",
     "install:all": "npm install && npm install --prefix client && npm install --prefix server",
     "postinstall": "npm install --prefix server && prisma generate --schema=server/prisma/schema.prisma"
   },
