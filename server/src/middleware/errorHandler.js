@@ -3,9 +3,8 @@ export default function errorHandler(err, req, res, _next) {
   const statusCode = err.statusCode || err.status || 500
   const message    = err.message || 'Internal server error'
 
-  if (process.env.NODE_ENV !== 'production') {
-    console.error(`[${req.method}] ${req.path} →`, err.message)
-  }
+  console.error(`[${req.method}] ${req.path} → ${statusCode}:`, err.message)
+  if (err.stack) console.error(err.stack.split('\n').slice(0, 4).join('\n'))
 
   // Prisma not-found
   if (err.code === 'P2025') {

@@ -58,9 +58,20 @@ if (process.env.NODE_ENV !== 'production') {
   app.use(morgan('dev'))
 }
 
-// Health check
-app.get('/api/health', (_req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() })
+// Health check — also tests DB connectivity
+app.get('/api/health', async (_req, res) => {
+  const health = { status: 'ok', timestamp: new Date().toISOString(), db: 'unknown' }
+  try {
+    const { PrismaClient } = await import('@prisma/client')
+    const p = new PrismaClient()
+    await p.$queryRaw`SELECT 1`
+    await p.$disconnect()
+    health.db = 'connected'
+  } catch (e) {
+    health.db = 'error: ' + e.message
+    health.status = 'degraded'
+  }
+  res.json(health)
 })
 
 // Routes
