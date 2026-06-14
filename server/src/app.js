@@ -1,11 +1,16 @@
 // d:/kaaya eco resort/server/src/app.js
-// Express app setup — no app.listen() so this can be imported by Vercel serverless
 import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
 import helmet from 'helmet'
 import compression from 'compression'
 import morgan from 'morgan'
+import path from 'path'
+import { fileURLToPath } from 'url'
+import { existsSync } from 'fs'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname  = path.dirname(__filename)
 
 import authRoutes     from './routes/auth.js'
 import roomRoutes     from './routes/rooms.js'
@@ -68,10 +73,22 @@ app.use('/api/reviews',   reviewRoutes)
 app.use('/api/inquiries', inquiryRoutes)
 app.use('/api/admin',     adminRoutes)
 
-// 404
-app.use((_req, res) => {
-  res.status(404).json({ message: 'Route not found' })
-})
+// In production, serve the built React frontend
+const clientDist = path.join(__dirname, '../../client/dist')
+if (process.env.NODE_ENV === 'production' && existsSync(clientDist)) {
+  app.use(express.static(clientDist))
+  app.get('*', (req, res) => {
+    if (req.path.startsWith('/api/')) {
+      res.status(404).json({ message: 'Route not found' })
+    } else {
+      res.sendFile(path.join(clientDist, 'index.html'))
+    }
+  })
+} else {
+  app.use((_req, res) => {
+    res.status(404).json({ message: 'Route not found' })
+  })
+}
 
 // Error handler
 app.use(errorHandler)
