@@ -12,7 +12,7 @@
     "db:studio": "prisma studio"
   },
   "dependencies": {
-    "@prisma/client": "^5.17.0",
+    "mysql2": "^3.11.0",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^2.4.0",
     "compression": "^1.7.4",

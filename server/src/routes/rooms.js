@@ -1,23 +1,28 @@
-// d:/kaaya eco resort/server/src/routes/rooms.js
 import { Router } from 'express'
-import { PrismaClient } from '@prisma/client'
+import pool from '../lib/db.js'
 
 const router = Router()
-const prisma = new PrismaClient()
+
+function parseRoom(row) {
+  return {
+    ...row,
+    amenities:  typeof row.amenities === 'string'  ? JSON.parse(row.amenities)  : row.amenities,
+    images:     typeof row.images    === 'string'  ? JSON.parse(row.images)     : row.images,
+    featured:   !!row.featured,
+    active:     row.active !== undefined ? !!row.active : undefined,
+  }
+}
 
 // GET /api/rooms
 router.get('/', async (req, res, next) => {
   try {
-    const rooms = await prisma.room.findMany({
-      where: { active: true },
-      select: {
-        id: true, name: true, slug: true, type: true, description: true,
-        pricePerNight: true, maxAdults: true, maxChildren: true, bedCount: true,
-        amenities: true, images: true, featured: true,
-      },
-      orderBy: [{ featured: 'desc' }, { pricePerNight: 'asc' }],
-    })
-    res.json({ rooms })
+    const [rows] = await pool.execute(
+      `SELECT id, name, slug, type, description, pricePerNight, maxAdults, maxChildren,
+              bedCount, amenities, images, featured
+       FROM Room WHERE active = 1
+       ORDER BY featured DESC, pricePerNight ASC`
+    )
+    res.json({ rooms: rows.map(parseRoom) })
   } catch (err) {
     next(err)
   }
@@ -26,20 +31,14 @@ router.get('/', async (req, res, next) => {
 // GET /api/rooms/:id
 router.get('/:id', async (req, res, next) => {
   try {
-    const room = await prisma.room.findFirst({
-      where: {
-        active: true,
-        OR: [{ id: req.params.id }, { slug: req.params.id }],
-      },
-      select: {
-        id: true, name: true, slug: true, type: true,
-        description: true, longDescription: true,
-        pricePerNight: true, maxAdults: true, maxChildren: true,
-        bedCount: true, amenities: true, images: true, featured: true,
-      },
-    })
-    if (!room) return res.status(404).json({ message: 'Room not found' })
-    res.json({ room })
+    const [rows] = await pool.execute(
+      `SELECT id, name, slug, type, description, longDescription, pricePerNight,
+              maxAdults, maxChildren, bedCount, amenities, images, featured
+       FROM Room WHERE active = 1 AND (id = ? OR slug = ?) LIMIT 1`,
+      [req.params.id, req.params.id]
+    )
+    if (!rows.length) return res.status(404).json({ message: 'Room not found' })
+    res.json({ room: parseRoom(rows[0]) })
   } catch (err) {
     next(err)
   }
@@ -60,29 +59,19 @@ router.get('/:id/availability', async (req, res, next) => {
       return res.status(400).json({ message: 'Invalid date range' })
     }
 
-    // Check for overlapping confirmed/pending bookings
-    const conflict = await prisma.booking.findFirst({
-      where: {
-        roomId: req.params.id,
-        status: { in: ['CONFIRMED', 'PENDING', 'CHECKED_IN'] },
-        AND: [
-          { checkIn:  { lt: end   } },
-          { checkOut: { gt: start } },
-        ],
-      },
-      select: { id: true },
-    })
+    const [conflict] = await pool.execute(
+      `SELECT id FROM Booking
+       WHERE roomId = ? AND status IN ('CONFIRMED','PENDING','CHECKED_IN')
+         AND checkIn < ? AND checkOut > ? LIMIT 1`,
+      [req.params.id, end, start]
+    )
 
-    // Check blocked dates
-    const blocked = await prisma.blockedDate.findFirst({
-      where: {
-        roomId: req.params.id,
-        date:   { gte: start, lt: end },
-      },
-      select: { id: true },
-    })
+    const [blocked] = await pool.execute(
+      'SELECT id FROM BlockedDate WHERE roomId = ? AND date >= ? AND date < ? LIMIT 1',
+      [req.params.id, start, end]
+    )
 
-    res.json({ available: !conflict && !blocked })
+    res.json({ available: !conflict.length && !blocked.length })
   } catch (err) {
     next(err)
   }

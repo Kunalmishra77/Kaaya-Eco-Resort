@@ -1,28 +1,25 @@
-// d:/kaaya eco resort/server/src/routes/gallery.js
 import { Router } from 'express'
-import { PrismaClient } from '@prisma/client'
+import pool from '../lib/db.js'
 
 const router = Router()
-const prisma = new PrismaClient()
 
 // GET /api/gallery?category=
 router.get('/', async (req, res, next) => {
   try {
     const { category } = req.query
 
-    const images = await prisma.galleryImage.findMany({
-      where: {
-        active: true,
-        ...(category && category !== 'all' ? { category } : {}),
-      },
-      select: {
-        id: true, url: true, publicId: true,
-        category: true, caption: true, sortOrder: true,
-      },
-      orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }],
-    })
+    let sql    = 'SELECT id, url, publicId, category, caption, sortOrder FROM GalleryImage WHERE active = 1'
+    const params = []
 
-    res.json({ images })
+    if (category && category !== 'all') {
+      sql += ' AND category = ?'
+      params.push(category)
+    }
+
+    sql += ' ORDER BY sortOrder ASC, createdAt DESC'
+
+    const [rows] = await pool.execute(sql, params)
+    res.json({ images: rows })
   } catch (err) {
     next(err)
   }

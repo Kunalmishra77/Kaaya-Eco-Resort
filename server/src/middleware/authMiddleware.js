@@ -1,8 +1,5 @@
-// d:/kaaya eco resort/server/src/middleware/authMiddleware.js
 import jwt from 'jsonwebtoken'
-import { PrismaClient } from '@prisma/client'
-
-const prisma = new PrismaClient()
+import pool from '../lib/db.js'
 
 export async function protect(req, res, next) {
   try {
@@ -11,19 +8,19 @@ export async function protect(req, res, next) {
       return res.status(401).json({ message: 'Not authenticated' })
     }
 
-    const token = header.split(' ')[1]
+    const token   = header.split(' ')[1]
     const decoded = jwt.verify(token, process.env.JWT_SECRET)
 
-    const user = await prisma.user.findUnique({
-      where: { id: decoded.id },
-      select: { id: true, email: true, firstName: true, lastName: true, role: true, phone: true },
-    })
+    const [rows] = await pool.execute(
+      'SELECT id, email, firstName, lastName, role, phone FROM User WHERE id = ? LIMIT 1',
+      [decoded.id]
+    )
 
-    if (!user) {
+    if (!rows.length) {
       return res.status(401).json({ message: 'User not found' })
     }
 
-    req.user = user
+    req.user = rows[0]
     next()
   } catch (err) {
     if (err.name === 'TokenExpiredError') {

@@ -1,13 +1,12 @@
-// d:/kaaya eco resort/server/src/routes/auth.js
 import { Router } from 'express'
+import { randomUUID } from 'crypto'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import rateLimit from 'express-rate-limit'
-import { PrismaClient } from '@prisma/client'
+import pool from '../lib/db.js'
 import { protect } from '../middleware/authMiddleware.js'
 
 const router = Router()
-const prisma = new PrismaClient()
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -35,24 +34,21 @@ router.post('/register', authLimiter, async (req, res, next) => {
       return res.status(400).json({ message: 'Password must be at least 8 characters' })
     }
 
-    const exists = await prisma.user.findUnique({ where: { email: email.toLowerCase() } })
-    if (exists) {
+    const normalEmail = email.toLowerCase().trim()
+    const [exists] = await pool.execute('SELECT id FROM User WHERE email = ? LIMIT 1', [normalEmail])
+    if (exists.length) {
       return res.status(409).json({ message: 'An account with this email already exists' })
     }
 
-    const hashedPassword = await bcrypt.hash(password, 12)
-    const user = await prisma.user.create({
-      data: {
-        email:     email.toLowerCase().trim(),
-        password:  hashedPassword,
-        firstName: firstName.trim(),
-        lastName:  lastName.trim(),
-        phone:     phone?.trim() || null,
-      },
-      select: { id: true, email: true, firstName: true, lastName: true, role: true, phone: true },
-    })
+    const id       = randomUUID()
+    const hashedPw = await bcrypt.hash(password, 12)
+    await pool.execute(
+      'INSERT INTO User (id, email, password, firstName, lastName, phone, role, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())',
+      [id, normalEmail, hashedPw, firstName.trim(), lastName.trim(), phone?.trim() || null, 'GUEST']
+    )
 
-    const token = signToken(user.id)
+    const user  = { id, email: normalEmail, firstName: firstName.trim(), lastName: lastName.trim(), role: 'GUEST', phone: phone?.trim() || null }
+    const token = signToken(id)
     res.status(201).json({ token, user })
   } catch (err) {
     next(err)
@@ -68,18 +64,18 @@ router.post('/login', authLimiter, async (req, res, next) => {
       return res.status(400).json({ message: 'Email and password are required' })
     }
 
-    const user = await prisma.user.findUnique({
-      where: { email: email.toLowerCase() },
-      select: { id: true, email: true, firstName: true, lastName: true, role: true, phone: true, password: true },
-    })
+    const [rows] = await pool.execute(
+      'SELECT id, email, firstName, lastName, role, phone, password FROM User WHERE email = ? LIMIT 1',
+      [email.toLowerCase()]
+    )
 
+    const user = rows[0]
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({ message: 'Invalid email or password' })
     }
 
     const { password: _, ...userWithoutPassword } = user
-    const token = signToken(user.id)
-    res.json({ token, user: userWithoutPassword })
+    res.json({ token: signToken(user.id), user: userWithoutPassword })
   } catch (err) {
     next(err)
   }
@@ -90,30 +86,25 @@ router.get('/me', protect, (req, res) => {
   res.json({ user: req.user })
 })
 
-// GET /api/auth/admin-exists — public, tells client whether any admin exists yet
+// GET /api/auth/admin-exists
 router.get('/admin-exists', async (_req, res, next) => {
   try {
-    const count = await prisma.user.count({ where: { role: 'ADMIN' } })
-    res.json({ exists: count > 0 })
+    const [[{ count }]] = await pool.execute("SELECT COUNT(*) as count FROM User WHERE role = 'ADMIN'")
+    res.json({ exists: Number(count) > 0 })
   } catch (err) {
     next(err)
   }
 })
 
-// POST /api/auth/claim-admin — promotes the logged-in user to ADMIN
-// Only works when zero ADMIN accounts exist in the database (first-time setup)
+// POST /api/auth/claim-admin
 router.post('/claim-admin', protect, async (req, res, next) => {
   try {
-    const adminCount = await prisma.user.count({ where: { role: 'ADMIN' } })
-    if (adminCount > 0) {
+    const [[{ count }]] = await pool.execute("SELECT COUNT(*) as count FROM User WHERE role = 'ADMIN'")
+    if (Number(count) > 0) {
       return res.status(403).json({ message: 'An admin already exists. Contact the existing admin to grant you access.' })
     }
-    const user = await prisma.user.update({
-      where: { id: req.user.id },
-      data:  { role: 'ADMIN' },
-      select: { id: true, email: true, firstName: true, lastName: true, role: true },
-    })
-    res.json({ user, message: 'You are now an admin!' })
+    await pool.execute("UPDATE User SET role = 'ADMIN', updatedAt = NOW() WHERE id = ?", [req.user.id])
+    res.json({ user: { ...req.user, role: 'ADMIN' }, message: 'You are now an admin!' })
   } catch (err) {
     next(err)
   }

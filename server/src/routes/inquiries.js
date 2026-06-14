@@ -1,10 +1,9 @@
-// d:/kaaya eco resort/server/src/routes/inquiries.js
 import { Router } from 'express'
-import { PrismaClient } from '@prisma/client'
+import { randomUUID } from 'crypto'
+import pool from '../lib/db.js'
 import { sendInquiryAck, notifyAdminNewInquiry } from '../services/emailService.js'
 
 const router = Router()
-const prisma = new PrismaClient()
 
 // POST /api/inquiries
 router.post('/', async (req, res, next) => {
@@ -20,23 +19,25 @@ router.post('/', async (req, res, next) => {
       return res.status(400).json({ message: 'Invalid email address' })
     }
 
-    const inquiry = await prisma.inquiry.create({
-      data: {
-        name:    name.trim(),
-        email:   email.toLowerCase().trim(),
-        phone:   phone?.trim() || null,
-        subject: subject?.trim() || 'General Inquiry',
-        message: message.trim(),
-      },
-      select: { id: true, createdAt: true },
-    })
+    const id = randomUUID()
+    await pool.execute(
+      `INSERT INTO Inquiry (id, name, email, phone, subject, message, \`read\`, createdAt, updatedAt)
+       VALUES (?, ?, ?, ?, ?, ?, 0, NOW(), NOW())`,
+      [
+        id,
+        name.trim(),
+        email.toLowerCase().trim(),
+        phone?.trim() || null,
+        subject?.trim() || 'General Inquiry',
+        message.trim(),
+      ]
+    )
 
-    // Send emails non-blocking
     sendInquiryAck({ name, email, message }).catch(() => {})
     notifyAdminNewInquiry({ name, email, phone, subject, message }).catch(() => {})
 
     res.status(201).json({
-      inquiry,
+      inquiry: { id, createdAt: new Date() },
       message: "Thank you for your message. We'll be in touch within 24 hours.",
     })
   } catch (err) {
