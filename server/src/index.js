@@ -1,25 +1,43 @@
 // d:/kaaya eco resort/server/src/index.js
 import { createServer } from 'http'
-import { execSync } from 'child_process'
+import { execSync }     from 'child_process'
 import { fileURLToPath } from 'url'
 import path from 'path'
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname  = path.dirname(__filename)
-const PORT = process.env.PORT || 5000
+const __filename   = fileURLToPath(import.meta.url)
+const __dirname    = path.dirname(__filename)
+const projectRoot  = path.join(__dirname, '../..')
+const PORT         = process.env.PORT || 5000
 
 async function start() {
-  // Run DB setup once on startup (idempotent — safe to run every restart)
   if (process.env.NODE_ENV === 'production') {
+    const schemaPath  = path.join(projectRoot, 'server/prisma/schema.prisma')
+    const seedPath    = path.join(projectRoot, 'server/prisma/seed.js')
+    // Try root node_modules first, then server node_modules
+    const prismaBin   = path.join(projectRoot, 'node_modules/.bin/prisma')
+
     try {
-      const schemaPath = path.join(__dirname, '../../server/prisma/schema.prisma')
-      const seedPath   = path.join(__dirname, '../../server/prisma/seed.js')
       console.log('[startup] Running prisma db push...')
-      execSync(`npx prisma db push --schema="${schemaPath}" --accept-data-loss`, { stdio: 'inherit' })
-      console.log('[startup] Running seed...')
-      execSync(`node "${seedPath}"`, { stdio: 'inherit' })
+      const out = execSync(`"${prismaBin}" db push --schema="${schemaPath}" --accept-data-loss`, {
+        cwd: projectRoot,
+        env: { ...process.env },
+      })
+      console.log('[startup] db push done:', out.toString().trim())
     } catch (err) {
-      console.error('[startup] DB setup error (non-fatal):', err.message)
+      console.error('[startup] db push STDERR:', err.stderr?.toString())
+      console.error('[startup] db push STDOUT:', err.stdout?.toString())
+    }
+
+    try {
+      console.log('[startup] Running seed...')
+      const out = execSync(`node "${seedPath}"`, {
+        cwd: projectRoot,
+        env: { ...process.env },
+      })
+      console.log('[startup] seed done:', out.toString().trim())
+    } catch (err) {
+      console.error('[startup] seed STDERR:', err.stderr?.toString())
+      console.error('[startup] seed STDOUT:', err.stdout?.toString())
     }
   }
 
