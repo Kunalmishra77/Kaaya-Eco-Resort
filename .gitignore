@@ -35,3 +35,5 @@ Thumbs.db
 
 # Vite temp files
 *.timestamp-*.mjs
+
+.vercel
