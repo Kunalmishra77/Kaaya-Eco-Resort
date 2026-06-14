@@ -1,12 +1,11 @@
 import mysql from 'mysql2/promise'
 
-const url = new URL(process.env.DATABASE_URL || 'mysql://root@localhost:3306/kaaya')
-
+// Use separate env vars to avoid URL-encoding issues with special chars in passwords
 const pool = mysql.createPool({
   socketPath:         '/var/lib/mysql/mysql.sock',
-  user:               decodeURIComponent(url.username),
-  password:           decodeURIComponent(url.password),
-  database:           url.pathname.slice(1),
+  user:               process.env.DB_USER     || 'u828459619_kaaya',
+  password:           process.env.DB_PASS     || '',
+  database:           process.env.DB_NAME     || 'u828459619_kaaya',
   waitForConnections: true,
   connectionLimit:    5,
   charset:            'utf8mb4',
