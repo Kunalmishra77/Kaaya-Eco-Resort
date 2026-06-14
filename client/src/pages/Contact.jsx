@@ -85,7 +85,7 @@ export default function Contact() {
                     <div>
                       <p className="font-sans font-semibold text-timber text-sm mb-1">Address</p>
                       <p className="font-sans text-timber/60 text-sm leading-relaxed">
-                        Yala, Southern Province<br />Sri Lanka
+                        Weweya Yodhakandiya, Yala<br />Southern Province, Sri Lanka
                       </p>
                     </div>
                   </div>
@@ -96,8 +96,8 @@ export default function Contact() {
                     </div>
                     <div>
                       <p className="font-sans font-semibold text-timber text-sm mb-1">Phone / WhatsApp</p>
-                      <a href="tel:+94771234567" className="font-sans text-timber/60 text-sm hover:text-sand transition-colors">
-                        +94 77 123 4567
+                      <a href="tel:+94725677777" className="font-sans text-timber/60 text-sm hover:text-sand transition-colors">
+                        +94 72 567 7777
                       </a>
                     </div>
                   </div>
@@ -108,8 +108,8 @@ export default function Contact() {
                     </div>
                     <div>
                       <p className="font-sans font-semibold text-timber text-sm mb-1">Email</p>
-                      <a href="mailto:bookings@kaayaecoresort.com" className="font-sans text-timber/60 text-sm hover:text-sand transition-colors">
-                        bookings@kaayaecoresort.com
+                      <a href="mailto:kaayaecoresort@gmail.com" className="font-sans text-timber/60 text-sm hover:text-sand transition-colors">
+                        kaayaecoresort@gmail.com
                       </a>
                     </div>
                   </div>
@@ -142,13 +142,18 @@ export default function Contact() {
                   </div>
                 </div>
 
-                {/* Map placeholder */}
-                <div className="h-48 rounded-sm bg-gradient-to-br from-forest/30 to-sage/20 flex items-center justify-center border border-sage/20">
-                  <div className="text-center">
-                    <MapPin size={28} className="text-forest/40 mx-auto mb-2" />
-                    <p className="font-sans text-timber/40 text-sm">Yala, Sri Lanka</p>
-                    <p className="font-sans text-timber/30 text-xs mt-1">6°22′N 81°33′E</p>
-                  </div>
+                {/* Google Maps embed */}
+                <div className="rounded-sm overflow-hidden border border-sage/20">
+                  <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.959523416551!2d81.32110727554947!3d6.269053826066728!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae69d3a850ce993%3A0xeb0035b9bf384dec!2sKaaya%20Eco%20Resort%20-%20Yala!5e0!3m2!1sen!2slk!4v1778688945614!5m2!1sen!2slk"
+                    width="100%"
+                    height="240"
+                    style={{ border: 0 }}
+                    allowFullScreen=""
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title="Kaaya Eco Resort Location"
+                  />
                 </div>
               </SectionReveal>
             </div>

@@ -16,15 +16,103 @@ const FILTERS = [
   { key: 'STANDARD_CHALET', label: 'Standard Chalets'},
 ]
 
+const STATIC_ROOMS = [
+  {
+    id: 'family-bungalow-1',
+    slug: 'family-bungalow-room-1',
+    name: 'Family Bungalow Room 1 – Lake View',
+    type: 'FAMILY_ROOM',
+    maxAdults: 6,
+    bedCount: 3,
+    pricePerNight: 17500,
+    featured: true,
+    description: 'Spacious family room with 3 beds and stunning Lake View. Air conditioned with attached bathroom. Accommodates up to 6 adults.',
+    images: ['/images/family-bungalow-exterior.jpg'],
+  },
+  {
+    id: 'family-bungalow-2',
+    slug: 'family-bungalow-room-2',
+    name: 'Family Bungalow Room 2 – Lake View',
+    type: 'FAMILY_ROOM',
+    maxAdults: 6,
+    bedCount: 3,
+    pricePerNight: 17500,
+    featured: true,
+    description: 'Spacious family room with 3 beds and stunning Lake View. Air conditioned with attached bathroom. Accommodates up to 6 adults.',
+    images: ['/images/family-bungalow-interior.jpg'],
+  },
+  {
+    id: 'family-chalet-jacuzzi',
+    slug: 'family-chalet-jacuzzi',
+    name: 'Family Chalet with Jacuzzi – Lake View',
+    type: 'FAMILY_CHALET',
+    maxAdults: 4,
+    bedCount: 2,
+    pricePerNight: 17500,
+    featured: true,
+    description: 'Private chalet with Jacuzzi and beautiful Lake View. Two beds, air conditioned with attached bathroom. Perfect for couples or small families.',
+    images: ['/images/jacuzzi-chalet.jpg'],
+  },
+  {
+    id: 'standard-chalet-1',
+    slug: 'standard-chalet-1',
+    name: 'Standard Chalet 1',
+    type: 'STANDARD_CHALET',
+    maxAdults: 2,
+    bedCount: 1,
+    pricePerNight: 9500,
+    featured: false,
+    description: 'Cosy standard chalet for 2 adults. Air conditioned with attached bathroom. Simple, comfortable, and surrounded by nature.',
+    images: ['/images/chalet-jungle-exterior.jpg'],
+  },
+  {
+    id: 'standard-chalet-2',
+    slug: 'standard-chalet-2',
+    name: 'Standard Chalet 2',
+    type: 'STANDARD_CHALET',
+    maxAdults: 2,
+    bedCount: 1,
+    pricePerNight: 9500,
+    featured: false,
+    description: 'Cosy standard chalet for 2 adults. Air conditioned with attached bathroom. Simple, comfortable, and surrounded by nature.',
+    images: ['/images/chalet-sunset.jpg'],
+  },
+  {
+    id: 'standard-chalet-3',
+    slug: 'standard-chalet-3',
+    name: 'Standard Chalet 3',
+    type: 'STANDARD_CHALET',
+    maxAdults: 2,
+    bedCount: 1,
+    pricePerNight: 9500,
+    featured: false,
+    description: 'Cosy standard chalet for 2 adults. Air conditioned with attached bathroom. Simple, comfortable, and surrounded by nature.',
+    images: ['/images/chalet-jungle-exterior.jpg'],
+  },
+  {
+    id: 'standard-chalet-4',
+    slug: 'standard-chalet-4',
+    name: 'Standard Chalet 4',
+    type: 'STANDARD_CHALET',
+    maxAdults: 2,
+    bedCount: 1,
+    pricePerNight: 9500,
+    featured: false,
+    description: 'Cosy standard chalet for 2 adults. Air conditioned with attached bathroom. Simple, comfortable, and surrounded by nature.',
+    images: ['/images/chalet-sunset.jpg'],
+  },
+]
+
 export default function Accommodation() {
   const dispatch = useDispatch()
-  const { rooms, loading, error } = useSelector((s) => s.rooms)
+  const { rooms: apiRooms, loading, error } = useSelector((s) => s.rooms)
   const [filter, setFilter] = useState('all')
 
   useEffect(() => {
     dispatch(fetchRooms())
   }, [dispatch])
 
+  const rooms = (apiRooms && apiRooms.length > 0) ? apiRooms : STATIC_ROOMS
   const filtered = filter === 'all' ? rooms : rooms.filter((r) => r.type === filter)
 
   return (
@@ -66,18 +154,8 @@ export default function Accommodation() {
             </div>
           )}
 
-          {/* Error */}
-          {!loading && error && (
-            <div className="text-center py-16">
-              <p className="font-sans text-terra text-base">Unable to load rooms. Please try again.</p>
-              <button onClick={() => dispatch(fetchRooms())} className="btn-outline mt-4">
-                Retry
-              </button>
-            </div>
-          )}
-
           {/* Rooms grid */}
-          {!loading && !error && (
+          {!loading && (
             <>
               {filtered.length === 0 ? (
                 <div className="text-center py-16">
@@ -105,11 +183,11 @@ export default function Accommodation() {
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 text-stone/70">
                 {[
                   'Outdoor Pool',
-                  'Restaurant & Bar',
+                  'Jacuzzi',
                   'BBQ Area',
                   'Tropical Garden',
-                  'Outdoor Dining',
-                  'Kids Play Area',
+                  'Boat Ride',
+                  'Lake Front',
                 ].map((amenity) => (
                   <div key={amenity} className="font-sans text-sm text-center">
                     <div className="w-10 h-10 rounded-full bg-stone/10 flex items-center justify-center mx-auto mb-2">

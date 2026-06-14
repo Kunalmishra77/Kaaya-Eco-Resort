@@ -12,8 +12,8 @@ const EXPLORE = [
 ]
 
 const ROOMS = [
-  { label: 'Family Room – Garden View', to: '/accommodation' },
-  { label: 'Family Room – Lake View',   to: '/accommodation' },
+  { label: 'Family Bungalow Room 1',    to: '/accommodation' },
+  { label: 'Family Bungalow Room 2',    to: '/accommodation' },
   { label: 'Family Chalet with Jacuzzi',to: '/accommodation' },
   { label: 'Standard Chalets',          to: '/accommodation' },
   { label: 'Check Availability',        to: '/book'          },
@@ -105,25 +105,25 @@ export default function Footer() {
               <li className="flex items-start gap-3">
                 <MapPin size={15} className="text-sand flex-shrink-0 mt-0.5" />
                 <span className="font-sans text-sm text-stone/60 leading-relaxed">
-                  Yala, Southern Province<br />Sri Lanka
+                  Weweya Yodhakandiya, Yala<br />Southern Province, Sri Lanka
                 </span>
               </li>
               <li>
                 <a
-                  href="tel:+94771234567"
+                  href="tel:+94725677777"
                   className="flex items-center gap-3 font-sans text-sm text-stone/60 hover:text-sand transition-colors"
                 >
                   <Phone size={15} className="text-sand flex-shrink-0" />
-                  +94 77 123 4567
+                  +94 72 567 7777
                 </a>
               </li>
               <li>
                 <a
-                  href="mailto:bookings@kaayaecoresort.com"
+                  href="mailto:kaayaecoresort@gmail.com"
                   className="flex items-center gap-3 font-sans text-sm text-stone/60 hover:text-sand transition-colors"
                 >
                   <Mail size={15} className="text-sand flex-shrink-0" />
-                  bookings@kaayaecoresort.com
+                  kaayaecoresort@gmail.com
                 </a>
               </li>
             </ul>

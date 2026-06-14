@@ -38,9 +38,9 @@ const MENUS = [
 
 const BARS = [
   {
-    title: 'The Wewa Bar',
-    desc:  'Open from late morning until midnight. Sri Lankan arrack cocktails, cold beers, fresh fruit juices, mocktails, and light bar snacks. The best seat in the house for a sunset over Yoda Wewa.',
-    items: ['Lion Beer & Carlsberg', 'Sri Lankan arrack cocktails', 'Fresh king coconut', 'Tropical fruit juices', 'Ginger tea & herbal drinks'],
+    title: 'The Wewa Bar — BYOB',
+    desc:  'Bring Your Own Bottles and enjoy! Our lakeside bar is yours — the best seat in the house for a sunset over Yoda Wewa. Get your bottles and enjoy with friends and family under the open sky.',
+    items: ['Fresh king coconut', 'Tropical fruit juices', 'Ginger tea & herbal drinks', 'Cold beverages', 'Light bar snacks'],
   },
 ]
 
@@ -69,7 +69,7 @@ export default function Dining() {
                 Sri Lanka's southern coast is known for some of the island's most flavourful, aromatic cuisine. At Kaaya, we cook the way our neighbours cook — with fresh coconut, garden-grown curry leaves, locally caught seafood, and spice blends ground daily.
               </p>
               <p className="prose-resort mb-4">
-                Most of our vegetables, herbs, and fruit come from nearby farms or our own garden. The fish is sourced from the coastal fishing communities at Kirinda Beach, just 12 kilometres away. Dining here is as much a part of the Yala experience as the safari itself.
+                Most of our vegetables, herbs, and fruit come from nearby farms or our own garden. The fish is sourced from the coastal fishing communities at Kirinda Beach, just 8 kilometres away. Dining here is as much a part of the Yala experience as the safari itself.
               </p>
               <p className="prose-resort">
                 We cater to all dietary requirements — vegetarian, vegan, and gluten-free menus are available. Please let us know at the time of booking.

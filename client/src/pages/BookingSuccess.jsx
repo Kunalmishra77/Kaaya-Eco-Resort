@@ -132,7 +132,7 @@ export default function BookingSuccess() {
               </div>
               <div className="flex items-start gap-3">
                 <span className="text-sand flex-shrink-0 mt-0.5">📞</span>
-                <p>For any queries, call us on +94 77 123 4567 or email bookings@kaayaecoresort.com.</p>
+                <p>For any queries, call us on +94 72 567 7777 or email kaayaecoresort@gmail.com.</p>
               </div>
             </div>
           </div>

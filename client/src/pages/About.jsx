@@ -24,9 +24,9 @@ const VALUES = [
 ]
 
 const TEAM_HIGHLIGHTS = [
-  { name: 'Chaminda', role: 'Head Guide & Naturalist', note: '12 years in Yala — has logged over 400 leopard sightings.' },
-  { name: 'Nirmala',  role: 'Head Chef', note: 'Born in Tissamaharama, trained in Colombo. Her crab curry is legendary.' },
-  { name: 'Ruwan',    role: 'Resort Manager', note: 'Keeps Kaaya running with warmth and precision. Been here since day one.' },
+  { name: 'Panchami',        role: 'Booking Manager',  note: '5 years at Kaaya. Fluent in English & Sinhala — your first point of contact for anything you need.' },
+  { name: 'Upali',           role: 'Inhouse Cook',     note: '20+ years crafting authentic local cuisine. Every meal is a taste of the Southern Province.' },
+  { name: 'Sachinta & Odith', role: 'Your Caretakers', note: 'Always on hand to ensure your stay is comfortable, relaxed, and exactly as you imagined.' },
 ]
 
 export default function About() {
@@ -130,20 +130,22 @@ export default function About() {
               </h2>
               <div className="space-y-4 prose-resort mb-8">
                 <p>
-                  We're located in Yala, in Sri Lanka's Southern Province — a five-and-a-half-hour drive from Colombo, or a scenic three-hour journey from Galle along the southern coastal highway.
+                  We're located in Yala, in Sri Lanka's Southern Province — a three-and-a-half-hour drive from Colombo, or a scenic journey from Colombo along the southern coastal highway.
                 </p>
                 <p>
-                  The nearest town is Tissamaharama, 10 kilometres away. The Yala National Park main entrance is a 15-minute drive. Kirinda Beach and its clifftop temple are 12 kilometres south.
+                  The nearest town is Tissamaharama, 8 kilometres away. The Yala National Park main entrance (Palatupana) is a 30-minute drive. Kirinda Beach 8 km, Tissamaharama Lake 6 km, Ella 80 km.
                 </p>
                 <p>
                   We front directly onto Yoda Wewa — the ancient reservoir that serves as a natural boundary and a constant source of wildlife. Elephants drink at the water's edge most evenings. Painted storks nest in the trees above us.
                 </p>
               </div>
               <div className="space-y-2 font-sans text-sm text-timber/70 mb-6">
-                <p>📍 Yala, Southern Province, Sri Lanka</p>
+                <p>📍 Weweya Yodhakandiya, Yala, Southern Province, Sri Lanka</p>
                 <p>✈️ Nearest airport: Mattala Rajapaksa International (HRI) — 45 mins</p>
-                <p>🚗 Colombo to Kaaya: approx. 5.5 hours</p>
-                <p>🏙️ Galle to Kaaya: approx. 3 hours</p>
+                <p>🚗 Colombo to Kaaya: approx. 3.5 hours</p>
+                <p>🏙️ Galle to Kaaya: approx. 2 hours</p>
+                <p>🏖️ Mirissa Beach to Kaaya: approx. 1 hour 45 minutes</p>
+                <p>🌊 Hiriketiya Beach to Kaaya: approx. 1 hour</p>
               </div>
             </SectionReveal>
           </div>

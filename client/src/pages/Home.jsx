@@ -41,7 +41,7 @@ const EXPERIENCES = [
     icon:  Users,
     title: 'Family Activities',
     image: '/images/pool-garden.jpg',
-    desc:  'Badminton court, kids play area, BBQ nights, and swimming pool. Memories the whole family will treasure.',
+    desc:  'Family gatherings, BYOB BBQ nights, swimming pool, Jacuzzi, boat rides, and large garden by the lake. Memories the whole family will treasure.',
   },
   {
     icon:  TreePine,
@@ -476,9 +476,9 @@ function GuestReviews() {
 }
 
 const PLACEHOLDER_ROOMS = [
-  { id: '1', name: 'Family Room – Lake View',    slug: 'family-room-lake-view',   type: 'FAMILY_ROOM',   pricePerNight: 34500, maxAdults: 6, bedCount: 3, description: 'Breathtaking sunrise views over Yoda Wewa lake.', images: ['/images/family-room-interior-b.jpg'] },
-  { id: '2', name: 'Family Chalet with Jacuzzi', slug: 'family-chalet-jacuzzi',   type: 'FAMILY_CHALET', pricePerNight: 52000, maxAdults: 4, bedCount: 2, description: 'Private chalet with outdoor Jacuzzi for ultimate luxury.', images: ['/images/jacuzzi-chalet.jpg'] },
-  { id: '3', name: 'Family Room – Garden View',  slug: 'family-room-garden-view', type: 'FAMILY_ROOM',   pricePerNight: 28500, maxAdults: 6, bedCount: 3, description: 'Spacious family room overlooking tropical gardens.', images: ['/images/family-room-interior-a.jpg'] },
+  { id: '1', name: 'Family Bungalow Room 1 – Lake View', slug: 'family-room-lake-view',   type: 'FAMILY_ROOM',   pricePerNight: 17500, maxAdults: 6, bedCount: 3, description: 'Spacious family room with 3 beds and Lake View. Air conditioned with attached bathroom.', images: ['/images/family-bungalow-interior.jpg'] },
+  { id: '2', name: 'Family Chalet with Jacuzzi',         slug: 'family-chalet-jacuzzi',   type: 'FAMILY_CHALET', pricePerNight: 17500, maxAdults: 4, bedCount: 2, description: 'Private chalet with Jacuzzi and Lake View. Air conditioned with attached bathroom.', images: ['/images/jacuzzi-chalet.jpg'] },
+  { id: '3', name: 'Family Bungalow Room 2 – Lake View', slug: 'family-room-garden-view', type: 'FAMILY_ROOM',   pricePerNight: 17500, maxAdults: 6, bedCount: 3, description: 'Spacious family room with 3 beds and Lake View. Air conditioned with attached bathroom.', images: ['/images/family-bungalow-exterior.jpg'] },
 ]
 
 const FALLBACK_REVIEWS = [

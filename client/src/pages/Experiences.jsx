@@ -58,9 +58,9 @@ const EXPERIENCES = [
     subtitle: 'Family Fun Within Our Gates',
     body:     [
       'Life at Kaaya is never dull, even when you choose to stay close. The swimming pool is a favourite gathering place in the afternoons — cool, serene, surrounded by flowering tropical plants.',
-      "The badminton court sees friendly family competitions most evenings. The kids play area keeps younger guests entertained during downtime. And our BBQ nights, held under a canopy of stars with Sri Lankan flavours and live music on request, are an experience in themselves.",
+      "Our BYOB BBQ nights are an experience in themselves — get your bottles, gather your family and friends, and enjoy under a canopy of stars. Take a boat ride on Yoda Wewa at sunset, or simply unwind in the Jacuzzi overlooking the lake.",
     ],
-    highlights: ['Swimming pool', 'Badminton court', 'Kids play area', 'BBQ nights', 'Outdoor dining', 'Picnic area'],
+    highlights: ['Swimming pool', 'Jacuzzi', 'BBQ nights (BYOB)', 'Boat ride', 'Large garden', 'Lake front'],
     image: '/images/pool-garden.jpg',
   },
   {

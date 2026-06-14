@@ -115,10 +115,10 @@ export default function Groups() {
                 <p className="section-label text-sand/70 mb-6">Resort Capacity</p>
                 <div className="space-y-4 mb-8">
                   {[
-                    { room: 'Family Room – Garden View',   cap: '6 adults' },
-                    { room: 'Family Room – Lake View',     cap: '6 adults' },
+                    { room: 'Family Bungalow Room 1',      cap: '6 adults' },
+                    { room: 'Family Bungalow Room 2',      cap: '6 adults' },
                     { room: 'Family Chalet with Jacuzzi',  cap: '4 adults' },
-                    { room: 'Standard Chalets (×4)',       cap: '2 adults each' },
+                    { room: 'Standard Chalets (×4)',       cap: '8 adults total' },
                   ].map((item) => (
                     <div key={item.room} className="flex items-center justify-between border-b border-stone/10 pb-3">
                       <span className="font-sans text-stone/70 text-sm">{item.room}</span>
@@ -218,7 +218,7 @@ export default function Groups() {
               <Link to="/contact" className="btn-primary">
                 Send an Enquiry <ArrowRight size={16} />
               </Link>
-              <a href="tel:+94771234567" className="btn-outline-white">
+              <a href="tel:+94725677777" className="btn-outline-white">
                 Call Us Directly
               </a>
             </SectionReveal>

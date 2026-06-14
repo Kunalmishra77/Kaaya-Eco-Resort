@@ -25,18 +25,7 @@ const MASONRY_BREAKPOINTS = {
   480:     1,
 }
 
-// Placeholder gallery items shown when no images uploaded yet
-const PLACEHOLDER_ITEMS = [
-  { id: '1', url: null, category: 'wildlife',      caption: 'Leopard at Yala National Park'      },
-  { id: '2', url: null, category: 'lake',          caption: 'Sunrise over Yoda Wewa'             },
-  { id: '3', url: null, category: 'accommodation', caption: 'Family Chalet with Jacuzzi'         },
-  { id: '4', url: null, category: 'dining',        caption: 'Sri Lankan breakfast spread'        },
-  { id: '5', url: null, category: 'wildlife',      caption: 'Elephant herd at the waterhole'     },
-  { id: '6', url: null, category: 'accommodation', caption: 'Lake View Family Room'              },
-  { id: '7', url: null, category: 'activities',    caption: 'Morning safari vehicle'             },
-  { id: '8', url: null, category: 'lake',          caption: 'Painted storks on Yoda Wewa'        },
-  { id: '9', url: null, category: 'dining',        caption: 'BBQ night under the stars'          },
-]
+const PLACEHOLDER_ITEMS = []
 
 export default function Gallery() {
   const [images,       setImages]       = useState([])
@@ -123,8 +112,14 @@ export default function Gallery() {
                 transition={{ duration: 0.3 }}
               >
                 {filtered.length === 0 ? (
-                  <div className="text-center py-16">
-                    <p className="font-sans text-timber/50">No images in this category yet.</p>
+                  <div className="text-center py-24">
+                    <div className="w-20 h-20 rounded-full bg-forest/10 flex items-center justify-center mx-auto mb-6">
+                      <span className="text-4xl">📷</span>
+                    </div>
+                    <h3 className="font-display text-timber text-2xl font-semibold mb-3">Gallery Coming Soon</h3>
+                    <p className="font-sans text-timber/50 text-base max-w-sm mx-auto leading-relaxed">
+                      We're putting together our photo collection. New pictures of the resort, wildlife, and lake views are on their way. Check back soon!
+                    </p>
                   </div>
                 ) : (
                   <Masonry
