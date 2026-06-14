@@ -5,13 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently \"npm run dev --prefix client\" \"npm run dev --prefix server\"",
-    "build": "npm install --prefix client --include=dev && npm run build --prefix client",
+    "build": "npm install --prefix client --include=dev && npm run build --prefix client && node_modules/.bin/prisma generate --schema=server/prisma/schema.prisma",
     "start": "node server/src/index.js",
     "install:all": "npm install && npm install --prefix client && npm install --prefix server",
-    "postinstall": "npm install --prefix server && prisma generate --schema=server/prisma/schema.prisma"
+    "postinstall": "npm install --prefix server"
   },
   "dependencies": {
     "@prisma/client": "^5.17.0",
+    "prisma": "^5.17.0",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^2.4.0",
     "compression": "^1.7.4",
@@ -28,7 +29,6 @@
     "stripe": "^16.5.0"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2",
-    "prisma": "^5.17.0"
+    "concurrently": "^8.2.2"
   }
 }
