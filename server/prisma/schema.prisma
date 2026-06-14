@@ -2,13 +2,12 @@
 generator client {
   provider      = "prisma-client-js"
   output        = "../../node_modules/.prisma/client"
-  binaryTargets = ["native", "rhel-openssl-1.0.x"]
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x", "linux-musl"]
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
 enum Role {
@@ -51,14 +50,14 @@ model Room {
   name            String
   slug            String        @unique
   type            RoomType
-  description     String        @default("")
-  longDescription String        @default("")
+  description     String        @db.Text
+  longDescription String        @db.Text
   pricePerNight   Float
   maxAdults       Int
   maxChildren     Int           @default(0)
   bedCount        Int           @default(1)
-  amenities       String[]
-  images          String[]
+  amenities       Json
+  images          Json
   featured        Boolean       @default(false)
   active          Boolean       @default(true)
   bookings        Booking[]
@@ -81,7 +80,7 @@ model Booking {
   children         Int           @default(0)
   totalPrice       Float
   status           BookingStatus @default(PENDING)
-  specialRequests  String?
+  specialRequests  String?       @db.Text
   stripePaymentId  String?
   guestName        String
   guestEmail       String
@@ -102,7 +101,7 @@ model Review {
   userId    String
   rating    Int
   title     String?
-  comment   String
+  comment   String   @db.Text
   approved  Boolean  @default(false)
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
@@ -132,7 +131,7 @@ model Inquiry {
   email     String
   phone     String?
   subject   String   @default("General Inquiry")
-  message   String
+  message   String   @db.Text
   read      Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
